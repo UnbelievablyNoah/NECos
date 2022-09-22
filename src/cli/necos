@@ -1,0 +1,17 @@
+#!/bin/bash
+command=$1
+
+function usage() {
+    echo "bozo"
+}
+# if there's no command
+if [ -z $command ]
+then
+    usage
+else
+    CMDFILE="$PWD/commands/$1"
+    echo $CMDFILE
+    if [ -e "$CMDFILE" ]; then
+        echo "$CMDFILE exists"
+    fi
+fi
