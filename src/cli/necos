@@ -1,17 +1,20 @@
 #!/bin/bash
 command=$1
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+CMDFILE=""
 
-function usage() {
-    echo "bozo"
-}
 # if there's no command
 if [ -z $command ]
 then
-    usage
+    CMDFILE="usage"
 else
-    CMDFILE="$PWD/commands/$1"
-    echo $CMDFILE
-    if [ -e "$CMDFILE" ]; then
-        echo "$CMDFILE exists"
-    fi
+    CMDFILE="$1"
+fi
+
+CMDPATH="$SCRIPT_DIR/commands/$CMDFILE"
+
+if [ -e "$CMDPATH" ]; then
+    source "$CMDPATH"
+else
+    echo "Command not found: $CMDFILE"
 fi
