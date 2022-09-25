@@ -21,7 +21,7 @@
  * @param { typeof NECos }
  */
 
-const { Collection, Client } = require("discord.js")
+const { Collection, Client, GatewayIntentBits: Intents } = require("discord.js")
 
 module.exports = class Bot {
     NECos = null
@@ -29,9 +29,67 @@ module.exports = class Bot {
     configuration = null
     client = null
 
+    // Declare utility functions
+    generatePresence = null
+
     constructor(NECos) {
+        const FileSystem = require("fs")
+
         this.NECos = NECos
         this.console = NECos.console
         this.configuration = NECos.configuration.bot
+
+        // Load utility functions
+        const utilities = FileSystem.readdirSync(`${__dirname}/utility`)
+        utilities.forEach(file => {
+            const name = file.replace('.ts', '').replace('.js', '')
+            const utilFunction = require(`./utility/${file}`)
+
+            this[name] = utilFunction.bind(null, this);
+        })
+
+        // Create client
+        this.client = new Client({
+            presence: {
+                status: "idle",
+                activities: [
+                    {
+                        name: "Starting up...",
+                        type: 1
+                    }
+                ]
+            },
+
+            intents: [
+                Intents.GuildBans,
+                Intents.GuildInvites,
+                Intents.GuildMessageTyping,
+                Intents.GuildScheduledEvents,
+                Intents.Guilds,
+                Intents.DirectMessageTyping,
+                Intents.GuildEmojisAndStickers,
+                Intents.GuildMembers,
+                Intents.GuildMessages,
+                Intents.GuildVoiceStates,
+                Intents.MessageContent,
+                Intents.DirectMessages,
+                Intents.GuildIntegrations,
+                Intents.GuildMessageReactions,
+                Intents.GuildPresences,
+                Intents.GuildWebhooks
+            ]
+        })
+
+        // Hook events
+        const events = FileSystem.readdirSync(`${__dirname}/events`)
+        events.forEach(file => {
+            const name = file.replace('.ts', '').replace('.js', '')
+            const eventsFunction = require(`./events/${file}`)
+
+            this.client.on(name, eventsFunction.bind(null, this))
+        })
+
+        // Log in
+        this.client.login(this.configuration.user.token)
     }
 }

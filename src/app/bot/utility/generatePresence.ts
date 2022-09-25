@@ -55,14 +55,16 @@ const presenceTable = [
         activities: [
             {
                 name: "you.",
-                type: 3
+                type: 3 // Watching
             }
         ]
     }
 ]
 
-module.exports = async (NECos) => {
+module.exports = (Bot) => {
     const presenceData = { ...presenceTable[Math.floor(Math.random() * presenceTable.length)] }
 
-    presenceData.activities[0].name += `\nNECos version ${NECos.version}`
+    presenceData.activities[0].name += ` - \nNECos version ${Bot.NECos.version}`
+
+    return presenceData
 }

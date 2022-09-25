@@ -16,8 +16,9 @@
 [bot]
     enabled = true
     [bot.user]
+        presence_update_interval = 30000 # Seconds * 1000 = milliseconds
         enable_sharding = false
-        token = ""
+        token = "MTAyMzY1OTk4ODI1MTU5NDgwMg.G3n0-H.lByyjE_PmYMVDAK4QQrjz_PG2JrRLQvtj_rvNM"
 
 [api]
     enabled = true
