@@ -24,14 +24,17 @@
 const Knex = require("knex");
 module.exports = class Database {
     NECos = null
+    console = null
     configuration = null
-    connection_pool = null
+    connection = null
 
     constructor(NECos) {
         this.NECos = NECos
+        this.console = NECos.console
         this.configuration = NECos.configuration.app.database
-        this.connection_pool = Knex(this.configuration) 
 
-        console.log(this)
+        this.console.debug("Creating database pool...")
+        this.connection = Knex(this.configuration) 
+        this.console.connection("Database pool created. Database connection ready.")
     }
 }

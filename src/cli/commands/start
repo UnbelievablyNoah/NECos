@@ -2,8 +2,12 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 FILE="$SCRIPT_DIR/../../../NECos.ts"
 
-TS_NODE_INSTALLED=$(npx list -g ts-node)
+# check global ts node installation
+TS_NODE_INSTALLED=$(npm list ts-node)
 
-echo $TS_NODE_INSTALLED
+if [[ "$TS_NODE_INSTALLED" == *empty* ]]; then
+    echo "ts-node is not installed. Please install ts-node to run NECos."
+    return
+fi
 
-# npx ts-node "$FILE" -- $FLAGS
+npx ts-node "$FILE" -- $FLAGS

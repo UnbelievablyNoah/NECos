@@ -57,6 +57,14 @@ module.exports = class Console {
         })
     }
 
+    starting = function(...output: Array<string>) {
+        output.forEach(function(string) {
+            const Timestamp = moment().format('MM-DD HH:mm:ss')
+
+            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.magenta('STARTING')} ${chalk.blue(']:')} ${string}`)
+        })
+    }
+
     connection = function(...output: Array<string>) {
         output.forEach(function(string) {
             const Timestamp = moment().format('MM-DD HH:mm:ss')

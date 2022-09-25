@@ -20,7 +20,7 @@
  */
 
 // Initialize configuration
-const Configuration = require("./modules/Configuration")
+const Configuration = require("./modules/Configuration.ts")
 
 // Instantiate NECos object
 const NECos = class NECos extends Configuration {
@@ -33,16 +33,24 @@ const NECos = class NECos extends Configuration {
     super("config/application.toml") // Initializes configuration
 
     this.debug = process.argv.includes("--debug") || process.argv.includes("-D")
-    this.console = new (require("./modules/Console"))(this)
+    this.console = new (require("./modules/Console.ts"))(this)
     this.console.debug("Console class loaded.")
-    this.console.debug("Beginning NECos framework initialization...")
+    this.console.starting("Beginning NECos framework initialization...")
 
     // Initialize database
     this.console.debug("Initializing database")
-    this.database = new (require("./modules/Database"))(this)
+    this.database = new (require("./modules/Database.ts"))(this)
     this.console.debug("Database initialized")
 
-    console.log(process.argv)
+    // Run bot if enabled
+    if (this.configuration.bot.enabled) {
+      this.console.debug("Discord bot enabled. Starting...")
+      try {
+        this.bot = new (require("./bot/Bot.ts"))(this)
+      } catch (error) {
+        this.console.error(`Discord bot failed to start. ${error}`)
+      }
+    }
   }
 }
 
