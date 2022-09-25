@@ -18,13 +18,28 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
- * @param { NECos }
+ * @param { fileName: string }
  */
 
-module.exports = class Configuration {
-    fileName = "";
+const TOML = require("toml");
+const FileSystem = require("fs");
 
-    constructor() {
-        
+module.exports = class Configuration {
+  fileName = "";
+  configuration = null
+
+  constructor(fileName: string) {
+    this.fileName = fileName;
+    
+    var configString;
+    try {
+      // Attempt to read the configuration file from the specified path
+      configString = FileSystem.readFileSync(this.fileName);
+
+      // Parse the toml data 
+      this.configuration = TOML.parse(configString);
+    } catch (error) {
+      throw new Error(`ParseException: configString failed to parse. Verify the syntax of ${this.fileName} and that the file exists.`)
     }
+  }
 }

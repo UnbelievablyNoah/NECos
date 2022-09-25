@@ -1,5 +1,6 @@
 #!/bin/bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+FLAGS=()
 CMDFILE=""
 
 # if there's no command
@@ -9,6 +10,25 @@ then
 else
     CMDFILE="$1"
 fi
+
+for var in "$@"
+do
+    if [[ $var == -* ]]
+    then
+        FLAGS+=($var)
+    fi
+done
+
+for FLAG in ${FLAGS[@]}; do
+    case $FLAG in
+      -H | --help | --usage | --version)
+        CMDFILE="usage"
+        ;;
+      -D | --debug)
+        DEBUG=true
+        ;;
+    esac
+done
 
 CMDPATH="$SCRIPT_DIR/commands/$CMDFILE"
 

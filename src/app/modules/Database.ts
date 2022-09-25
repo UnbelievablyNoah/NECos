@@ -18,13 +18,20 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
- * @param { NECos }
+ * @param { typeof NECos }
  */
 
+const Knex = require("knex");
 module.exports = class Database {
     NECos = null
+    configuration = null
+    connection_pool = null
 
     constructor(NECos) {
         this.NECos = NECos
+        this.configuration = NECos.configuration.app.database
+        this.connection_pool = Knex(this.configuration) 
+
+        console.log(this)
     }
 }

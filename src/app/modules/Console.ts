@@ -18,7 +18,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
- * @param { NECos }
+ * @param { typeof NECos }
  */
 
 const chalk = require("chalk");
@@ -31,7 +31,7 @@ module.exports = class Console {
         this.NECos = NECos;
     }
 
-    Info = function(...output: Array<string>) {
+    info = function(...output: Array<string>) {
         output.forEach(function(string) {
             const Timestamp = moment().format("MM-DD HH:mm:ss")
 
@@ -39,8 +39,8 @@ module.exports = class Console {
         })
     }
 
-    Debug = function(...output: Array<string>) {
-        if (this.NECos.Debug) {
+    debug = function(...output: Array<string>) {
+        if (this.NECos.debug) {
             output.forEach(function(string) {
                 const Timestamp = moment().format('MM-DD HH:mm:ss')
 
@@ -49,7 +49,7 @@ module.exports = class Console {
         }
     }
 
-    Ready = function(...output: Array<string>) {
+    ready = function(...output: Array<string>) {
         output.forEach(function(string) {
             const Timestamp = moment().format('MM-DD HH:mm:ss')
 
@@ -57,7 +57,7 @@ module.exports = class Console {
         })
     }
 
-    Connection = function(...output: Array<string>) {
+    connection = function(...output: Array<string>) {
         output.forEach(function(string) {
             const Timestamp = moment().format('MM-DD HH:mm:ss')
 
@@ -65,7 +65,7 @@ module.exports = class Console {
         })
     }
 
-    Success = function(...output: Array<string>){
+    success = function(...output: Array<string>){
         output.forEach(function(string) {
             const Timestamp = moment().format('MM-DD HH:mm:ss')
 
@@ -73,7 +73,7 @@ module.exports = class Console {
         }) 
     }
 
-    Error = function(...output: Array<string>){
+    error = function(...output: Array<string>){
         output.forEach(function(string) {
             const Timestamp = moment().format('MM-DD HH:mm:ss')
 
@@ -81,7 +81,7 @@ module.exports = class Console {
         })
     }
 
-    Critical = function(...output: Array<string>){
+    critical = function(...output: Array<string>){
         output.forEach(function(string) {
             const Timestamp = moment().format('MM-DD HH:mm:ss')
 
@@ -89,7 +89,7 @@ module.exports = class Console {
         })
     }
 
-    Warn = function(...output: Array<string>){
+    warn = function(...output: Array<string>){
         output.forEach(function(string) {
             const Timestamp = moment().format('MM-DD HH:mm:ss')
 
@@ -97,7 +97,7 @@ module.exports = class Console {
         })
     }
 
-    Important = function(...output: Array<string>){
+    important = function(...output: Array<string>){
         output.forEach(function(string) {
             const Timestamp = moment().format('MM-DD HH:mm:ss')
 

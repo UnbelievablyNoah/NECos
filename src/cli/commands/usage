@@ -1,13 +1,12 @@
 #!/bin/bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 echo "NECos CLI Version" `cat "$SCRIPT_DIR/../VERSION"`
-echo "NECos Repository Mainline Version" `git log --format="%H" -n 1 | cut -c1-7`
 echo "NECos Local Repository Version" `git rev-parse HEAD | cut -c1-7`
 echo ""
 echo "Usage: ./necos [command] [OPTIONS]"
 echo "Options:"
-echo "  -h | --help | --usage     Shows the usage prompt"
-echo "  -D | --debug              Enabled debugging mode"
+echo "  -H | --help | --usage | --version Shows the usage prompt"
+echo "  -D | --debug                      Enabled debugging mode"
 echo ""
 echo "Commands:"
 echo "  usage                          Shows the NECos CLI usage information"

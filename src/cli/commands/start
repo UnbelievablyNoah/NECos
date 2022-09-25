@@ -1,1 +1,5 @@
 #!/bin/bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+FILE="$SCRIPT_DIR/../../../NECos.ts"
+
+bun run "$FILE" -- $FLAGS
