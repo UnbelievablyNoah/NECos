@@ -28,4 +28,4 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: cp -r config.example config
-    - run: npx ts-node NECos.ts -- --debug
+    - run: NODE_ENV=ci npx ts-node NECos.ts -- --debug

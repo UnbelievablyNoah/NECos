@@ -90,6 +90,8 @@ module.exports = class Bot {
         })
 
         // Log in
-        this.client.login(this.configuration.user.token)
+        if (process.env.NODE_ENV != "ci") {
+            this.client.login(this.configuration.user.token)
+        }
     }
 }
