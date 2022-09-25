@@ -21,16 +21,17 @@
  * @param { typeof NECos }
  */
 
+const { Collection, Client } = require("discord.js")
+
 module.exports = class Bot {
     NECos = null
     console = null
     configuration = null
+    client = null
 
     constructor(NECos) {
         this.NECos = NECos
         this.console = NECos.console
         this.configuration = NECos.configuration.bot
-
-        
     }
 }

@@ -33,6 +33,8 @@ const NECos = class NECos extends Configuration {
     super("config/application.toml") // Initializes configuration
 
     this.debug = process.argv.includes("--debug") || process.argv.includes("-D")
+    // this.version = FileSystem.readFileSync(".git/refs/heads/master")
+
     this.console = new (require("./modules/Console.ts"))(this)
     this.console.debug("Console class loaded.")
     this.console.starting("Beginning NECos framework initialization...")
