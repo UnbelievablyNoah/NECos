@@ -1,0 +1,33 @@
+# NECos application configuration
+
+[app]
+    [app.database]
+        client = "mysql2"
+        [app.database.connection]
+            host = "127.0.0.1"
+            port = "3306"
+            user = "username"
+            password = "password"
+            database = "NECos"
+        [app.database.pool] # Used for keeping active connections to a database so we don't have to make a new connection every single time >:(
+            min = 1
+            max = 10
+
+[bot]
+    enabled = true
+    [bot.user]
+        presence_update_interval = 30000 # Seconds * 1000 = milliseconds
+        enable_sharding = false
+        token = ""
+
+[api]
+    enabled = true
+    bind_port = 3000
+    [api.whitelist]
+        enabled = false
+        ips = ["0.0.0.0"]
+        user_agents = [] # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+    [api.blacklist]
+        enabled = false
+        ips = []
+        user_agents = [] # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
