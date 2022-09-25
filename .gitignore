@@ -1,5 +1,8 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 
+# bozo batallion
+config/
+
 # Logs
 
 logs
@@ -167,6 +170,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.\*
-
-# bozo batallion
-config/
