@@ -23,17 +23,18 @@
 const Configuration = require("./modules/Configuration.ts")
 
 // Instantiate NECos object
-const NECos = class NECos extends Configuration {
+const NECos = class NECos {
   debug = false
+  configuration = (new Configuration("config/application.toml")).configuration
+  bot = null
   version = ""
   console = null
   database = null
 
   constructor() {
-    super("config/application.toml") // Initializes configuration
-
+    const FileSystem = require("fs")
     this.debug = process.argv.includes("--debug") || process.argv.includes("-D")
-    // this.version = FileSystem.readFileSync(".git/refs/heads/master")
+    this.version = FileSystem.readFileSync(".git/refs/heads/master").toString().substring(0, 7) || "Unknown"
 
     this.console = new (require("./modules/Console.ts"))(this)
     this.console.debug("Console class loaded.")

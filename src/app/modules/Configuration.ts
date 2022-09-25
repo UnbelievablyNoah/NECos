@@ -22,13 +22,13 @@
  */
 
 const TOML = require("toml");
-const FileSystem = require("fs");
 
 module.exports = class Configuration {
   fileName = "";
   configuration = null
 
   constructor(fileName: string) {
+    const FileSystem = require("fs");
     this.fileName = fileName;
     
     var configString;
