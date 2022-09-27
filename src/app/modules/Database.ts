@@ -26,7 +26,7 @@ module.exports = class Database {
     NECos = null
     console = null
     configuration = null
-    connection = null
+    database = null
 
     constructor(NECos) {
         this.NECos = NECos
@@ -34,7 +34,7 @@ module.exports = class Database {
         this.configuration = NECos.configuration.app.database
 
         this.console.debug("Creating database pool...")
-        this.connection = Knex(this.configuration) 
+        this.database = Knex(this.configuration) 
         this.console.connection("Database pool created. Database connection ready.")
     }
 }
