@@ -8,6 +8,6 @@
     // so that if your project isn't using TypeScript, it still has autocomplete
     "allowJs": true,
 
-    "types": ["discord.js"]
+    "types": ["discord.js", "knex"]
   }
 }
