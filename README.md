@@ -1,6 +1,6 @@
 <div align="center">
     <img src="https://cdn.imskyyc.xyz/i/JIRq" width="150px" />
-    <h2>NECos</h2>
+    <h1>NECos</h1>
     <a href="https://github.com/Nuclear-Engineering-Co/NECos-Bun/actions/workflows/build.yml">
         <img src="https://github.com/Nuclear-Engineering-Co/NECos-Bun/actions/workflows/build.yml/badge.svg">
     </a>
