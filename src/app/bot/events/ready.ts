@@ -22,15 +22,18 @@
  */
 
 module.exports = async (Bot) => {
+  // Load commands (try-catches are handled in the function)
+  await Bot.loadCommands();
+
   // Start presence thread
   async function setPresence() {
     try {
-      Bot.client.user.setPresence(Bot.generatePresence())
+      Bot.client.user.setPresence(Bot.generatePresence());
     } catch (error) {
-      Bot.console.error(error)
+      Bot.console.error(error);
     }
   }
 
-  setPresence()
-  setInterval(setPresence, Bot.configuration.user.presence_update_interval)
-}
+  setPresence();
+  setInterval(setPresence, Bot.configuration.user.presence_update_interval);
+};

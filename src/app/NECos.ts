@@ -20,41 +20,45 @@
  */
 
 // Initialize configuration
-const Configuration = require("./modules/Configuration.ts")
+const Configuration = require("./modules/Configuration.ts");
 
 // Instantiate NECos object
 const NECos = class NECos {
-  debug = false
-  configuration = (new Configuration("config/application.toml")).configuration
-  bot = null
-  version = ""
-  console = null
-  database = null
+  debug = false;
+  configuration = new Configuration("config/application.toml").configuration;
+  bot = null;
+  version = "";
+  console = null;
+  database = null;
 
   constructor() {
-    const FileSystem = require("fs")
-    this.debug = process.argv.includes("--debug") || process.argv.includes("-D")
-    this.version = FileSystem.readFileSync(".git/refs/heads/master").toString().substring(0, 7) || "Unknown"
+    const FileSystem = require("fs");
+    this.debug =
+      process.argv.includes("--debug") || process.argv.includes("-D");
+    this.version =
+      FileSystem.readFileSync(".git/refs/heads/master")
+        .toString()
+        .substring(0, 7) || "Unknown";
 
-    this.console = new (require("./modules/Console.ts"))(this)
-    this.console.debug("Console class loaded.")
-    this.console.starting("Beginning NECos framework initialization...")
+    this.console = new (require("./modules/Console.ts"))(this);
+    this.console.debug("Console class loaded.");
+    this.console.starting("Beginning NECos framework initialization...");
 
     // Initialize database
-    this.console.debug("Initializing database")
-    this.database = new (require("./modules/Database.ts"))(this)
-    this.console.debug("Database initialized")
+    this.console.debug("Initializing database");
+    this.database = new (require("./modules/Database.ts"))(this);
+    this.console.debug("Database initialized");
 
     // Run bot if enabled
     if (this.configuration.bot.enabled) {
-      this.console.debug("Discord bot enabled. Starting...")
+      this.console.debug("Discord bot enabled. Starting...");
       try {
-        this.bot = new (require("./bot/Bot.ts"))(this)
+        this.bot = new (require("./bot/Bot.ts"))(this);
       } catch (error) {
-        this.console.error(`Discord bot failed to start. ${error}`)
+        this.console.error(`Discord bot failed to start. ${error}`);
       }
     }
   }
-}
+};
 
 module.exports = new NECos();

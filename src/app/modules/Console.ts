@@ -25,91 +25,127 @@ const chalk = require("chalk");
 const moment = require("moment");
 
 module.exports = class Console {
-    NECos = null;
+  NECos = null;
 
-    constructor(NECos) {
-        this.NECos = NECos;
+  constructor(NECos) {
+    this.NECos = NECos;
+  }
+
+  info = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
+
+      console.log(`${chalk.blue("[" + Timestamp + " | INFO ]:")} ${string}`);
+    });
+  };
+
+  debug = function (...output: Array<string>) {
+    if (this.NECos.debug) {
+      output.forEach(function (string) {
+        const Timestamp = moment().format("MM-DD HH:mm:ss");
+
+        return console.log(
+          `${chalk.blue("[" + Timestamp + " | ")}${chalk.cyan(
+            "DEBUG"
+          )} ${chalk.blue("]:")} ${string}`
+        );
+      });
     }
+  };
 
-    info = function(...output: Array<string>) {
-        output.forEach(function(string) {
-            const Timestamp = moment().format("MM-DD HH:mm:ss")
+  ready = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
 
-            console.log(`${chalk.blue('[' + Timestamp + ' | INFO ]:')} ${string}`)
-        })
-    }
+      return console.log(
+        `${chalk.blue("[" + Timestamp + " | ")}${chalk.greenBright(
+          "READY"
+        )} ${chalk.blue("]:")} ${string}`
+      );
+    });
+  };
 
-    debug = function(...output: Array<string>) {
-        if (this.NECos.debug) {
-            output.forEach(function(string) {
-                const Timestamp = moment().format('MM-DD HH:mm:ss')
+  starting = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
 
-                return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.cyan('DEBUG')} ${chalk.blue(']:')} ${string}`)
-            })
-        }
-    }
+      return console.log(
+        `${chalk.blue("[" + Timestamp + " | ")}${chalk.magenta(
+          "STARTING"
+        )} ${chalk.blue("]:")} ${string}`
+      );
+    });
+  };
 
-    ready = function(...output: Array<string>) {
-        output.forEach(function(string) {
-            const Timestamp = moment().format('MM-DD HH:mm:ss')
+  connection = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
 
-            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.greenBright('READY')} ${chalk.blue(']:')} ${string}`)
-        })
-    }
+      return console.log(
+        `${chalk.blue("[" + Timestamp + " | ")}${chalk.greenBright(
+          "CONNECTION"
+        )} ${chalk.blue("]:")} ${string}`
+      );
+    });
+  };
 
-    starting = function(...output: Array<string>) {
-        output.forEach(function(string) {
-            const Timestamp = moment().format('MM-DD HH:mm:ss')
+  success = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
 
-            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.magenta('STARTING')} ${chalk.blue(']:')} ${string}`)
-        })
-    }
+      return console.log(
+        `${chalk.blue("[" + Timestamp + " | ")}${chalk.green(
+          "SUCCESS"
+        )} ${chalk.blue("]:")} ${string}`
+      );
+    });
+  };
 
-    connection = function(...output: Array<string>) {
-        output.forEach(function(string) {
-            const Timestamp = moment().format('MM-DD HH:mm:ss')
+  error = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
 
-            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.greenBright('CONNECTION')} ${chalk.blue(']:')} ${string}`)
-        })
-    }
+      return console.log(
+        `${chalk.blue("[" + Timestamp + " | ")}${chalk.bgRedBright(
+          "ERROR"
+        )} ${chalk.blue("]:")} ${string}`
+      );
+    });
+  };
 
-    success = function(...output: Array<string>){
-        output.forEach(function(string) {
-            const Timestamp = moment().format('MM-DD HH:mm:ss')
+  critical = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
 
-            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.green('SUCCESS')} ${chalk.blue(']:')} ${string}`)
-        }) 
-    }
+      return console.log(
+        `${chalk.blue("[" + Timestamp + " | ")}${chalk.bgRed(
+          "CRITICAL"
+        )} ${chalk.blue("]:")} ${string}`
+      );
+    });
+  };
 
-    error = function(...output: Array<string>){
-        output.forEach(function(string) {
-            const Timestamp = moment().format('MM-DD HH:mm:ss')
+  warn = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
 
-            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.bgRedBright('ERROR')} ${chalk.blue(']:')} ${string}`)
-        })
-    }
+      return console.log(
+        `${chalk.blue("[" + Timestamp + " | ")}${chalk.yellow(
+          "WARN"
+        )} ${chalk.blue("]:")} ${string}`
+      );
+    });
+  };
 
-    critical = function(...output: Array<string>){
-        output.forEach(function(string) {
-            const Timestamp = moment().format('MM-DD HH:mm:ss')
+  important = function (...output: Array<string>) {
+    output.forEach(function (string) {
+      const Timestamp = moment().format("MM-DD HH:mm:ss");
 
-            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.bgRed('CRITICAL')} ${chalk.blue(']:')} ${string}`)
-        })
-    }
-
-    warn = function(...output: Array<string>){
-        output.forEach(function(string) {
-            const Timestamp = moment().format('MM-DD HH:mm:ss')
-
-            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.yellow('WARN')} ${chalk.blue(']:')} ${string}`)
-        })
-    }
-
-    important = function(...output: Array<string>){
-        output.forEach(function(string) {
-            const Timestamp = moment().format('MM-DD HH:mm:ss')
-
-            return console.log(`${chalk.blue('[' + Timestamp + ' | ')}${chalk.red('IMPORTANT')} ${chalk.blue(']:')} ${string}`)
-        })
-    }
-}
+      return console.log(
+        `${chalk.blue("[" + Timestamp + " | ")}${chalk.red(
+          "IMPORTANT"
+        )} ${chalk.blue("]:")} ${string}`
+      );
+    });
+  };
+};

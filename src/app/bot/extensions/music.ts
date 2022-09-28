@@ -1,6 +1,6 @@
 /**
- * @name Database.ts
- * @description NECos database wrapper class
+ * @name music.ts
+ * @description Extends the Extension class to create a music / song request handler.
  * @author imskyyc
  * @repository https://github.com/Nuclear-Engineering-Co/NECos-Bun
  * @license AGPL3
@@ -21,22 +21,4 @@
  * @param { typeof NECos }
  */
 
-const Knex = require("knex");
-module.exports = class Database {
-  NECos = null;
-  console = null;
-  configuration = null;
-  database = null;
 
-  constructor(NECos) {
-    this.NECos = NECos;
-    this.console = NECos.console;
-    this.configuration = require.main.require("./config/dbconfig.js");
-
-    this.console.debug("Creating database pool...");
-    this.database = Knex(this.configuration[process.env.NODE_ENV]);
-    this.console.connection(
-      "Database pool created. Database connection ready."
-    );
-  }
-};

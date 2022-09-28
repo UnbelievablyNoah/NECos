@@ -1,5 +1,5 @@
 /**
- * @name generatePresence.ts
+ * @name loadCommands.ts
  * @description Function that generates presence data
  * @author imskyyc
  * @repository https://github.com/Nuclear-Engineering-Co/NECos-Bun
@@ -21,52 +21,12 @@
  * @param { typeof NECos }
  */
 
-// For all activity types, see https://discord-api-types.dev/api/discord-api-types-v10/enum/ActivityType
-const presenceTable = [
-  {
-    status: "dnd",
-    activities: [
-      {
-        name: "the discord bot wars of 2042...",
-        type: 5, // Competing
-      },
-    ],
-  },
-  {
-    status: "online",
-    activities: [
-      {
-        name: "some games",
-        type: 0, // Playing
-      },
-    ],
-  },
-  {
-    status: "idle",
-    activities: [
-      {
-        name: "some random events",
-        type: 2, // Listening
-      },
-    ],
-  },
-  {
-    status: "dnd",
-    activities: [
-      {
-        name: "you.",
-        type: 3, // Watching
-      },
-    ],
-  },
-];
 
-module.exports = (Bot) => {
-  const presenceData = {
-    ...presenceTable[Math.floor(Math.random() * presenceTable.length)],
-  };
+module.exports = async (Bot) => {
+  const FileSystem = require("fs/promises");
 
-  presenceData.activities[0].name += ` - \nNECos version ${Bot.NECos.version}`;
-
-  return presenceData;
+  const commands = await FileSystem.readdir("./src/app/bot/commands");
+  for (const directory of commands) {
+    console.log(directory);
+  }
 };
