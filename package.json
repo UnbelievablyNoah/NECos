@@ -1,6 +1,9 @@
 {
   "name": "necos",
   "module": "NECos.ts",
+  "scripts": {
+    "dev": "NODE_ENV=development npx ts-node NECos.ts -- --debug"
+  },
   "dependencies": {
     "chalk": "4",
     "discord.js": "^14.5.0",

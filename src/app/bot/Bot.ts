@@ -35,6 +35,8 @@ module.exports = class Bot {
 
   // Declare utility functions
   generatePresence = null;
+  loadCommands = null;
+  createEmbed = null;
 
   constructor(NECos) {
     const FileSystem = require("fs");
@@ -97,5 +99,7 @@ module.exports = class Bot {
     if (process.env.NODE_ENV != "ci") {
       this.client.login(this.configuration.user.token);
     }
+
+    this.createEmbed();
   }
 };
