@@ -16,4 +16,4 @@
     <br />
 </div>
 
-NECos is a Discord bot & REST API developed for [NECo](https://www.roblox.com/groups/6380413/Nuclear-Engineering-Co#!/about)
+<p align="center">NECos is a Discord bot & REST API developed for [NECo](https://www.roblox.com/groups/6380413/Nuclear-Engineering-Co#!/about)</p>
