@@ -1,6 +1,6 @@
 /**
- * @name Database.ts
- * @description NECos database wrapper class
+ * @name interactionCreate.ts
+ * @description Function bound on bot start which handles whenever an interaction (of any type) is created against the API
  * @author imskyyc
  * @repository https://github.com/Nuclear-Engineering-Co/NECos-Bun
  * @license AGPL3
@@ -18,26 +18,12 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
- * @param { typeof NECos }
+ * @param { typeof Bot }
+ * @param { typeof BaseInteraction }
  */
 
-import Knex from "knex";
-import * as Configuration from "../../../config/dbconfig.js";
-export class Database {
-  NECos = null;
-  console = null;
-  configuration = null;
-  database = null;
+import type { BaseInteraction } from "discord.js";
 
-  constructor(NECos) {
-    this.NECos = NECos;
-    this.console = NECos.console;
-    this.configuration = Configuration.default;
-
-    this.console.debug("Creating database pool...");
-    this.database = Knex(this.configuration[process.env.NODE_ENV]);
-    this.console.connection(
-      "Database pool created. Database connection ready."
-    );
-  }
-}
+export default async (Bot, Interaction: BaseInteraction) => {
+  console.log(Interaction);
+};

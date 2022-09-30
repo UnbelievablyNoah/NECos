@@ -21,8 +21,8 @@
  * @param { typeof NECos }
  */
 
-import { readdir } from 'fs/promises';
-import { Collection } from '@discordjs/collection';
+import { readdir } from "fs/promises";
+import { Collection } from "@discordjs/collection";
 
 export default async (Bot) => {
   const commandsDir = await readdir("./src/app/bot/commands");
@@ -34,17 +34,21 @@ export default async (Bot) => {
 
     for (const file of categoryDir) {
       if (categoryArray.has(file)) {
-        console.warn(`Command Category ${directory} already contains a key matching ${file}. Verify you have no duplicate commands`)
+        console.warn(
+          `Command Category ${directory} already contains a key matching ${file}. Verify you have no duplicate commands`
+        );
 
         continue;
       }
 
-      const command = new((await import(`../commands/${directory}/${file}`)).default);
+      const command = new (
+        await import(`../commands/${directory}/${file}`)
+      ).default(Bot);
       categoryArray.set(command.name, command);
     }
 
     commands.set(directory, categoryArray);
   }
 
-  console.log(commands);
+  Bot.commands = commands;
 };

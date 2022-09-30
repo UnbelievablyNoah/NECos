@@ -19,11 +19,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { readFileSync } from 'fs'
-import { Configuration } from "./modules/Configuration.js"
-import { Console } from './modules/Console.js'
-import { Database } from './modules/Database.js'
-import { Bot } from './bot/Bot.js'
+import { readFileSync } from "fs";
+import { Configuration } from "./modules/Configuration.js";
+import { Console } from "./modules/Console.js";
+import { Database } from "./modules/Database.js";
+import { Bot } from "./bot/Bot.js";
 
 // Initialize configuration
 
@@ -40,9 +40,8 @@ const NECos = class NECos {
     this.debug =
       process.argv.includes("--debug") || process.argv.includes("-D");
     this.version =
-      readFileSync(".git/refs/heads/master")
-        .toString()
-        .substring(0, 7) || "Unknown";
+      readFileSync(".git/refs/heads/master").toString().substring(0, 7) ||
+      "Unknown";
 
     this.console = new Console(this);
     this.console.debug("Console class loaded.");

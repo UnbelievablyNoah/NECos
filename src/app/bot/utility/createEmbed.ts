@@ -22,10 +22,9 @@
  * @returns { MessageEmbed }
  */
 
-import { EmbedBuilder } from "@discordjs/builders"
+import { EmbedBuilder } from "@discordjs/builders";
 
 export default (Bot, embedData) => {
-  
   var embedData = embedData || {};
 
   const embed = new EmbedBuilder(embedData);

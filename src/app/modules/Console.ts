@@ -21,7 +21,7 @@
  * @param { typeof NECos }
  */
 
-import chalk from 'chalk'
+import chalk from "chalk";
 export class Console {
   NECos = null;
 
@@ -29,28 +29,30 @@ export class Console {
     this.NECos = NECos;
   }
 
-  getTimestamp = function() {
+  getTimestamp = function () {
     const dateObject = new Date();
-    const date = (`0 ${dateObject.getDate()}`).slice(-2);
-    
+    const date = `0 ${dateObject.getDate()}`.slice(-2);
+
     // current month
-    const month = (`0 ${dateObject.getMonth() + 1}`).slice(-2);
-    
+    const month = `0 ${dateObject.getMonth() + 1}`.slice(-2);
+
     // current hours
     const hours = dateObject.getHours();
-    
+
     // current minutes
     const minutes = dateObject.getMinutes();
-    
+
     // current seconds
     const seconds = dateObject.getSeconds();
-    
-    return `${month}-${date} ${hours}:${minutes}:${seconds}`
-  }
+
+    return `${month}-${date} ${hours}:${minutes}:${seconds}`;
+  };
 
   info = function (...output: Array<string>) {
     for (const string of output) {
-      console.log(`${chalk.blue("[" + this.getTimestamp() + " | INFO ]:")} ${string}`);
+      console.log(
+        `${chalk.blue("[" + this.getTimestamp() + " | INFO ]:")} ${string}`
+      );
     }
   };
 
@@ -145,4 +147,4 @@ export class Console {
       );
     }
   };
-};
+}

@@ -21,8 +21,8 @@
  * @param { fileName: string }
  */
 
-import { parse as parseTOML } from 'toml'
-import { readFileSync } from 'fs'
+import { parse as parseTOML } from "toml";
+import { readFileSync } from "fs";
 
 export class Configuration {
   fileName = "";
@@ -44,4 +44,4 @@ export class Configuration {
       );
     }
   }
-};
+}

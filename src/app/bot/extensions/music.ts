@@ -21,27 +21,20 @@
  * @param { typeof NECos }
  */
 
-
 export class Music {
   NECos = null;
 
-  queue = {}
-  cooldowns = {}
+  queue = {};
+  cooldowns = {};
 
   constructor(NECos) {
-    this.NECos = NECos; 
+    this.NECos = NECos;
   }
 
-  requestSong = async (songQuery: string) => {
-    
-  }
+  requestSong = async (songQuery: string) => {};
 
   // Loader functions
-  up = async () => {
-    
-  }
+  up = async () => {};
 
-  down = async () => {
-
-  }
+  down = async () => {};
 }
