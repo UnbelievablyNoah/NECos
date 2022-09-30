@@ -21,23 +21,23 @@
  * @param { fileName: string }
  */
 
-const TOML = require("toml");
+import { parse as parseTOML } from 'toml'
+import { readFileSync } from 'fs'
 
-module.exports = class Configuration {
+export class Configuration {
   fileName = "";
   configuration = null;
 
   constructor(fileName: string) {
-    const FileSystem = require("fs");
     this.fileName = fileName;
 
     var configString;
     try {
       // Attempt to read the configuration file from the specified path
-      configString = FileSystem.readFileSync(this.fileName);
+      configString = readFileSync(this.fileName);
 
       // Parse the toml data
-      this.configuration = TOML.parse(configString);
+      this.configuration = parseTOML(configString);
     } catch (error) {
       throw new Error(
         `ParseException: configString failed to parse. Verify the syntax of ${this.fileName} and that the file exists.`

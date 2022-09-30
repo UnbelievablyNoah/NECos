@@ -10,4 +10,4 @@ if [[ "$TS_NODE_INSTALLED" == *empty* ]]; then
     return
 fi
 
-npx ts-node "$FILE" -- $FLAGS
+npx ts-node-esm "$FILE" -- $FLAGS

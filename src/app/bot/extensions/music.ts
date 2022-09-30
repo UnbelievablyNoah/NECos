@@ -22,3 +22,26 @@
  */
 
 
+export class Music {
+  NECos = null;
+
+  queue = {}
+  cooldowns = {}
+
+  constructor(NECos) {
+    this.NECos = NECos; 
+  }
+
+  requestSong = async (songQuery: string) => {
+    
+  }
+
+  // Loader functions
+  up = async () => {
+    
+  }
+
+  down = async () => {
+
+  }
+}

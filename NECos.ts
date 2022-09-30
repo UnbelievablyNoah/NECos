@@ -1,1 +1,2 @@
-module.exports = require("./src/app/NECos.ts")
+import * as NECos from './src/app/NECos.js'
+export default NECos;

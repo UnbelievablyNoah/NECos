@@ -21,11 +21,10 @@
  * @param { typeof NECos }
  */
 
+import { readdir } from 'fs/promises';
 
-module.exports = async (Bot) => {
-  const FileSystem = require("fs/promises");
-
-  const commands = await FileSystem.readdir("./src/app/bot/commands");
+export default async (Bot) => {
+  const commands = await readdir("./src/app/bot/commands");
   for (const directory of commands) {
     console.log(directory);
   }

@@ -21,7 +21,7 @@
  * @param { typeof NECos }
  */
 
-module.exports = async (Bot) => {
+export default async (Bot) => {
   // Load commands (try-catches are handled in the function)
   await Bot.loadCommands();
 

@@ -19,8 +19,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { readFileSync } from 'fs'
+import { Configuration } from "./modules/Configuration.js"
+import { Console } from './modules/Console.js'
+import { Database } from './modules/Database.js'
+import { Bot } from './bot/Bot.js'
+
 // Initialize configuration
-const Configuration = require("./modules/Configuration.ts");
 
 // Instantiate NECos object
 const NECos = class NECos {
@@ -32,28 +37,27 @@ const NECos = class NECos {
   database = null;
 
   constructor() {
-    const FileSystem = require("fs");
     this.debug =
       process.argv.includes("--debug") || process.argv.includes("-D");
     this.version =
-      FileSystem.readFileSync(".git/refs/heads/master")
+      readFileSync(".git/refs/heads/master")
         .toString()
         .substring(0, 7) || "Unknown";
 
-    this.console = new (require("./modules/Console.ts"))(this);
+    this.console = new Console(this);
     this.console.debug("Console class loaded.");
     this.console.starting("Beginning NECos framework initialization...");
 
     // Initialize database
     this.console.debug("Initializing database");
-    this.database = new (require("./modules/Database.ts"))(this);
+    this.database = new Database(this);
     this.console.debug("Database initialized");
 
     // Run bot if enabled
     if (this.configuration.bot.enabled) {
       this.console.debug("Discord bot enabled. Starting...");
       try {
-        this.bot = new (require("./bot/Bot.ts"))(this);
+        this.bot = new Bot(this);
       } catch (error) {
         this.console.error(`Discord bot failed to start. ${error}`);
       }
@@ -61,4 +65,4 @@ const NECos = class NECos {
   }
 };
 
-module.exports = new NECos();
+export default new NECos();

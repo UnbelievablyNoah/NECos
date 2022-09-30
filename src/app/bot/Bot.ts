@@ -21,13 +21,20 @@
  * @param { typeof NECos }
  */
 
-const {
+// Decalre dirname
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import {
   Collection,
   Client,
-  GatewayIntentBits: Intents,
-} = require("discord.js");
-
-module.exports = class Bot {
+  GatewayIntentBits as Intents,
+} from 'discord.js';
+import { readdirSync } from 'fs'
+export class Bot {
   NECos = null;
   console = null;
   configuration = null;
@@ -39,20 +46,22 @@ module.exports = class Bot {
   createEmbed = null;
 
   constructor(NECos) {
-    const FileSystem = require("fs");
+    this.constructBot(NECos);
+  }
 
+  constructBot = async (NECos) => {
     this.NECos = NECos;
     this.console = NECos.console;
     this.configuration = NECos.configuration.bot;
 
     // Load utility functions
-    const utilities = FileSystem.readdirSync(`${__dirname}/utility`);
-    utilities.forEach((file) => {
+    const utilities = readdirSync(`${__dirname}/utility`);
+    for (const file of utilities) {
       const name = file.replace(".ts", "").replace(".js", "");
-      const utilFunction = require(`./utility/${file}`);
+      const utilFunction = await import(`./utility/${file}`);
 
-      this[name] = utilFunction.bind(null, this);
-    });
+      this[name] = utilFunction.default.bind(null, this);
+    }
 
     // Create client
     this.client = new Client({
@@ -87,19 +96,17 @@ module.exports = class Bot {
     });
 
     // Hook events
-    const events = FileSystem.readdirSync(`${__dirname}/events`);
-    events.forEach((file) => {
+    const events = readdirSync(`${__dirname}/events`);
+    for (const file of events) {
       const name = file.replace(".ts", "").replace(".js", "");
-      const eventsFunction = require(`./events/${file}`);
+      const eventsFunction = await import(`./events/${file}`);
 
-      this.client.on(name, eventsFunction.bind(null, this));
-    });
+      this.client.on(name, eventsFunction.default.bind(null, this));
+    }
 
     // Log in
     if (process.env.NODE_ENV != "ci") {
       this.client.login(this.configuration.user.token);
     }
-
-    this.createEmbed();
   }
 };

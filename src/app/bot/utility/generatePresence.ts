@@ -61,7 +61,7 @@ const presenceTable = [
   },
 ];
 
-module.exports = (Bot) => {
+export default (Bot) => {
   const presenceData = {
     ...presenceTable[Math.floor(Math.random() * presenceTable.length)],
   };

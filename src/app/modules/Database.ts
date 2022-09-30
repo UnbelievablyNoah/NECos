@@ -21,8 +21,9 @@
  * @param { typeof NECos }
  */
 
-const Knex = require("knex");
-module.exports = class Database {
+import Knex from 'knex'
+import * as Configuration from '../../../config/dbconfig.js'
+export class Database {
   NECos = null;
   console = null;
   configuration = null;
@@ -31,7 +32,7 @@ module.exports = class Database {
   constructor(NECos) {
     this.NECos = NECos;
     this.console = NECos.console;
-    this.configuration = require.main.require("./config/dbconfig.js");
+    this.configuration = Configuration.default;
 
     this.console.debug("Creating database pool...");
     this.database = Knex(this.configuration[process.env.NODE_ENV]);

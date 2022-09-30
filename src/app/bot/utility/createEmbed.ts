@@ -22,8 +22,10 @@
  * @returns { MessageEmbed }
  */
 
-module.exports = (Bot, embedData) => {
-  const { EmbedBuilder } = require("@discordjs/builders");
+import { EmbedBuilder } from "@discordjs/builders"
+
+export default (Bot, embedData) => {
+  
   var embedData = embedData || {};
 
   const embed = new EmbedBuilder(embedData);
@@ -36,8 +38,6 @@ module.exports = (Bot, embedData) => {
   }
 
   embed.setTimestamp();
-
-  console.log(embed.toJSON());
 
   return embed;
 };
