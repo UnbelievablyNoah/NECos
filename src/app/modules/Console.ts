@@ -45,7 +45,7 @@ export class Console {
     // current seconds
     const seconds = dateObject.getSeconds();
     
-    return `$-${month}-${date} ${hours}:${minutes}:${seconds}`
+    return `${month}-${date} ${hours}:${minutes}:${seconds}`
   }
 
   info = function (...output: Array<string>) {

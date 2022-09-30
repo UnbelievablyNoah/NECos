@@ -22,10 +22,29 @@
  */
 
 import { readdir } from 'fs/promises';
+import { Collection } from '@discordjs/collection';
 
 export default async (Bot) => {
-  const commands = await readdir("./src/app/bot/commands");
-  for (const directory of commands) {
-    console.log(directory);
+  const commandsDir = await readdir("./src/app/bot/commands");
+  const commands = new Collection();
+
+  for (const directory of commandsDir) {
+    const categoryArray = new Collection();
+    const categoryDir = await readdir(`./src/app/bot/commands/${directory}`);
+
+    for (const file of categoryDir) {
+      if (categoryArray.has(file)) {
+        console.warn(`Command Category ${directory} already contains a key matching ${file}. Verify you have no duplicate commands`)
+
+        continue;
+      }
+
+      const command = new((await import(`../commands/${directory}/${file}`)).default);
+      categoryArray.set(command.name, command);
+    }
+
+    commands.set(directory, categoryArray);
   }
+
+  console.log(commands);
 };

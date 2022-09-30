@@ -3,7 +3,7 @@
   "module": "NECos.ts",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development npx ts-node NECos.ts -- --debug"
+    "dev": "NODE_ENV=development npx ts-node-esm NECos.ts -- --debug"
   },
   "dependencies": {
     "chalk": "^5.0.1",
