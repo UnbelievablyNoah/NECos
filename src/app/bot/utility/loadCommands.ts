@@ -22,11 +22,14 @@
  */
 
 import { readdir } from "fs/promises";
-import { Collection } from "@discordjs/collection";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { REST, Routes, Collection } from "discord.js";
 
 export default async (Bot) => {
+  const console = Bot.console;
   const commandsDir = await readdir("./src/app/bot/commands");
   const commands = new Collection();
+  const commandJSON = [];
 
   for (const directory of commandsDir) {
     const categoryArray = new Collection();
@@ -45,9 +48,35 @@ export default async (Bot) => {
         await import(`../commands/${directory}/${file}`)
       ).default(Bot);
       categoryArray.set(command.name, command);
+
+      // Create slashCommand
+      const SlashCommand = new SlashCommandBuilder();
+      SlashCommand.setName(command.name);
+      SlashCommand.setDescription(command.description);
+
+      for (const option of command.options || []) {
+        SlashCommand.options.push(option);
+      }
+      commandJSON.push(SlashCommand.toJSON());
     }
 
     commands.set(directory, categoryArray);
+  }
+
+  try {
+    console.debug("Spawning Discord REST API");
+    const API = new REST({ version: "10" }).setToken(
+      Bot.configuration.user.token
+    );
+
+    console.debug("Pushing SlashCommands to Discord REST.");
+    await API.put(Routes.applicationCommands(Bot.client.user.id), {
+      body: commandJSON,
+    });
+
+    console.success("Successfully pushed SlashCommands to Discord REST API");
+  } catch (error) {
+    console.error(`Failed to push SlashCommands to Discord API! ${error}`);
   }
 
   Bot.commands = commands;

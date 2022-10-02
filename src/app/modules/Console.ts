@@ -31,10 +31,10 @@ export class Console {
 
   getTimestamp = function () {
     const dateObject = new Date();
-    const date = `0 ${dateObject.getDate()}`.slice(-2);
+    const date = `0${dateObject.getDate()}`.slice(-2);
 
     // current month
-    const month = `0 ${dateObject.getMonth() + 1}`.slice(-2);
+    const month = `0${dateObject.getMonth() + 1}`.slice(-2);
 
     // current hours
     const hours = dateObject.getHours();

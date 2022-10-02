@@ -1,6 +1,7 @@
-import type { CommandInteraction } from "discord.js";
+import { CommandInteraction, SlashCommandStringOption } from "discord.js";
+import { BaseCommand } from "../../classes/BaseCommand.js";
 
-export default class VerifyCommand {
+export default class VerifyCommand extends BaseCommand {
   Bot = null;
   NECos = null;
 
@@ -9,11 +10,11 @@ export default class VerifyCommand {
     "Allows users to authenticate their discord accout through ROBLOX.";
 
   constructor(Bot) {
-    this.Bot = Bot;
-    this.NECos = Bot.NECos;
+    super(Bot);
   }
 
-  onCommand = async (Interaction: CommandInteraction) => {
-    console.log(Interaction);
+  onCommand = async function (Interaction: CommandInteraction): Promise<[boolean, string]> {
+    Interaction.reply("HI!")
+    return [true, ""];
   };
 }

@@ -22,8 +22,34 @@
  * @param { typeof BaseInteraction }
  */
 
-import type { BaseInteraction } from "discord.js";
+import { Collection, BaseInteraction } from 'discord.js';
+
+const cooldownData: Collection<string, Collection<string, Array<string>>> = new Collection();
 
 export default async (Bot, Interaction: BaseInteraction) => {
-  console.log(Interaction);
+  if (!Interaction.inCachedGuild()) return;
+  const member = Interaction.member;
+
+  if (Interaction.isCommand()) { // Handle command interactons
+    const commands: Collection<string, Collection<string, any>> = Bot.commands;
+    const command = commands.find(category => category.find(command => command.name == Interaction.commandName)).first();
+
+    // check cooldown
+    if (command.cooldown && !member.permissions.has("ManageMessages")) {
+      if (!cooldownData.has(command.name)) {
+        cooldownData.set(command.name, new Collection())
+      }
+
+      const commandCooldownData = cooldownData.get(command.name)
+      const cooldownTime = commandCooldownData.get(member.id);
+
+      if (cooldownTime !== null) {
+        
+      } else {
+
+      }
+    }
+
+    
+  }
 };

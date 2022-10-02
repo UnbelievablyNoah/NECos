@@ -1,6 +1,7 @@
+import { GuildTextBasedChannel, TextChannel } from 'discord.js';
 /**
- * @name music.ts
- * @description Extends the Extension class to create a music / song request handler.
+ * @name guildCreate.ts
+ * @description Function bound on bot start which handles whenever the client user joins a guild
  * @author imskyyc
  * @repository https://github.com/Nuclear-Engineering-Co/NECos-Bun
  * @license AGPL3
@@ -18,25 +19,12 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
- * @param { typeof NECos }
+ * @param { typeof Bot }
+ * @param { typeof Guild }
  */
 
-import { BaseExtension } from "../classes/BaseExtension";
+import { ChannelType, Guild } from "discord.js";
 
-export class Music extends BaseExtension {
-  NECos = null;
-
-  queue = {};
-  cooldowns = {};
-
-  constructor(NECos) {
-    super(NECos);
-  }
-
-  requestSong = async (songQuery: string) => {};
-
-  // Loader functions
-  up = async () => {};
-
-  down = async () => {};
-}
+export default async (Bot, Guild: Guild) => {
+  
+};

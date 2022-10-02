@@ -27,8 +27,18 @@ export default async (Bot) => {
 
   // Start presence thread
   async function setPresence() {
+    const presence = {
+      status: "online",
+      activities: [
+        {
+          name: "necos.dev | /help",
+          type: 0
+        }
+      ]
+    }
+
     try {
-      Bot.client.user.setPresence(Bot.generatePresence());
+      Bot.client.user.setPresence(presence);
     } catch (error) {
       Bot.console.error(error);
     }
