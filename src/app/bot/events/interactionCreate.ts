@@ -22,34 +22,133 @@
  * @param { typeof BaseInteraction }
  */
 
-import { Collection, BaseInteraction } from 'discord.js';
+import { Collection, BaseInteraction, Colors } from 'discord.js';
 
-const cooldownData: Collection<string, Collection<string, Array<string>>> = new Collection();
+const cooldownData: Collection<string, Collection<string, number>> = new Collection();
+const commandTrackers: Collection<string, Collection<string, boolean>> = new Collection();
 
 export default async (Bot, Interaction: BaseInteraction) => {
   if (!Interaction.inCachedGuild()) return;
   const member = Interaction.member;
 
-  if (Interaction.isCommand()) { // Handle command interactons
+  if (Interaction.isCommand() && Bot.commands) { // Handle command interactons
     const commands: Collection<string, Collection<string, any>> = Bot.commands;
     const command = commands.find(category => category.find(command => command.name == Interaction.commandName)).first();
 
     // check cooldown
-    if (command.cooldown && !member.permissions.has("ManageMessages")) {
+    if (command.cooldown) {
       if (!cooldownData.has(command.name)) {
         cooldownData.set(command.name, new Collection())
       }
 
+      const now = new Date().getTime();
       const commandCooldownData = cooldownData.get(command.name)
       const cooldownTime = commandCooldownData.get(member.id);
+      const cooldownAmount = (command.cooldown || 0) * 1000;
 
-      if (cooldownTime !== null) {
-        
+      if (cooldownTime !== null && cooldownTime > 0) {
+        const timeLeft = (cooldownTime - now) / 1000;
+        return Interaction.reply({
+          embeds: [
+            Bot.createEmbed({
+              title: "Command Cooldown",
+              description: `Please wait ${timeLeft.toFixed(1)} more second(s) before executing ${command.name}.`,
+              color: Colors.Red
+            })
+          ],
+
+          ephemeral: true
+        })
       } else {
-
+        commandCooldownData.set(member.id, now + cooldownAmount);
+        setTimeout(() => commandCooldownData.delete(member.id), cooldownAmount);
       }
     }
 
-    
+    if (!commandTrackers.has(command.name)) {
+      commandTrackers.set(command.name, new Collection());
+    }
+
+    const commandTracker = commandTrackers.get(command.name);
+    if (commandTracker.has(member.id)) return;
+
+    commandTracker.set(member.id, true);
+    var [commandExecuted, commandReturn] = [false, ""];
+
+    try {
+      [commandExecuted, commandReturn] = await command.onCommand(Bot, Interaction);
+    } catch (error) {
+      console.error(error);
+      console.error(`Command ${command.name} encountered an error onCommand. Please investigate the above output.`)
+
+      if (Interaction.replied) {
+        return Interaction.editReply({
+          content: "",
+          files: [],
+
+          embeds: [
+            Bot.createEmbed({
+              title: "Command Error",
+              description: `Comand ${command.name} ran in to an error: ${error}.`,
+              color: Colors.Red
+            })
+          ]
+        })
+      } else {
+        return Interaction.reply({
+          content: "",
+          files: [],
+          
+          embeds: [
+            Bot.createEmbed({
+              title: "Command Error",
+              description: `Command ${command.name} ran in to an error: ${error}.`,
+              color: Colors.Red
+            })
+          ],
+  
+          ephemeral: true
+        })
+      }
+    }
+
+    try {
+      await commandTracker.delete(member.id);
+    } catch (error) {
+      console.error(error);
+      console.warn(`Command Tracker failed to delete ${member.id}. Please investigate the above output.`)
+    }
+
+    if (!commandExecuted) {
+      if (Interaction.replied) {
+        return Interaction.editReply({
+          content: "",
+          files: [],
+          
+          embeds: [
+            Bot.createEmbed({
+              title: "Command Execution Failed",
+              description: `Command ${command.name} failed to execute: ${commandReturn}.`,
+              color: Colors.Red
+            })
+          ]
+        })
+      } else {
+        return Interaction.reply({
+          content: "",
+          files: [],
+
+          embeds: [
+            Bot.createEmbed({
+              title: "Command Execution Failed",
+              description: `Command ${command.name} failed to execute: ${commandReturn}.`,
+              color: Colors.Red
+            })
+          ],
+  
+          ephemeral: true
+        })
+      }
+    }
   }
 };

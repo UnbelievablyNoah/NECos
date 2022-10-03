@@ -14,7 +14,7 @@ export abstract class BaseCommand {
         this.NECos = Bot.NECos;
     }
 
-    onCommand = async function (Interaction: CommandInteraction) : Promise<[boolean, string]> {
+    onCommand = async function (Bot, Interaction: CommandInteraction) : Promise<[boolean, string]> {
         throw new Error("Method not implemented")
     }
 }
