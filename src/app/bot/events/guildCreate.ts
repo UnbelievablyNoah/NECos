@@ -1,4 +1,4 @@
-import { GuildTextBasedChannel, TextChannel } from 'discord.js';
+import { GuildTextBasedChannel, TextChannel } from "discord.js";
 /**
  * @name guildCreate.ts
  * @description Function bound on bot start which handles whenever the client user joins a guild
@@ -25,6 +25,4 @@ import { GuildTextBasedChannel, TextChannel } from 'discord.js';
 
 import { ChannelType, Guild } from "discord.js";
 
-export default async (Bot, Guild: Guild) => {
-  
-};
+export default async (Bot, Guild: Guild) => {};

@@ -22,27 +22,38 @@
  * @param { typeof BaseInteraction }
  */
 
-import { Collection, BaseInteraction, Colors } from 'discord.js';
+import { Collection, BaseInteraction, Colors } from "discord.js";
 
-const cooldownData: Collection<string, Collection<string, number>> = new Collection();
-const commandTrackers: Collection<string, Collection<string, boolean>> = new Collection();
+const cooldownData: Collection<
+  string,
+  Collection<string, number>
+> = new Collection();
+const commandTrackers: Collection<
+  string,
+  Collection<string, boolean>
+> = new Collection();
 
 export default async (Bot, Interaction: BaseInteraction) => {
   if (!Interaction.inCachedGuild()) return;
   const member = Interaction.member;
 
-  if (Interaction.isCommand() && Bot.commands) { // Handle command interactons
+  if (Interaction.isCommand() && Bot.commands) {
+    // Handle command interactons
     const commands: Collection<string, Collection<string, any>> = Bot.commands;
-    const command = commands.find(category => category.find(command => command.name == Interaction.commandName)).first();
+    const command = commands
+      .find((category) =>
+        category.find((command) => command.name == Interaction.commandName)
+      )
+      .first();
 
     // check cooldown
     if (command.cooldown) {
       if (!cooldownData.has(command.name)) {
-        cooldownData.set(command.name, new Collection())
+        cooldownData.set(command.name, new Collection());
       }
 
       const now = new Date().getTime();
-      const commandCooldownData = cooldownData.get(command.name)
+      const commandCooldownData = cooldownData.get(command.name);
       const cooldownTime = commandCooldownData.get(member.id);
       const cooldownAmount = (command.cooldown || 0) * 1000;
 
@@ -52,13 +63,15 @@ export default async (Bot, Interaction: BaseInteraction) => {
           embeds: [
             Bot.createEmbed({
               title: "Command Cooldown",
-              description: `Please wait ${timeLeft.toFixed(1)} more second(s) before executing ${command.name}.`,
-              color: Colors.Red
-            })
+              description: `Please wait ${timeLeft.toFixed(
+                1
+              )} more second(s) before executing ${command.name}.`,
+              color: Colors.Red,
+            }),
           ],
 
-          ephemeral: true
-        })
+          ephemeral: true,
+        });
       } else {
         commandCooldownData.set(member.id, now + cooldownAmount);
         setTimeout(() => commandCooldownData.delete(member.id), cooldownAmount);
@@ -76,39 +89,35 @@ export default async (Bot, Interaction: BaseInteraction) => {
     var [commandExecuted, commandReturn] = [false, ""];
 
     try {
-      [commandExecuted, commandReturn] = await command.onCommand(Bot, Interaction);
+      [commandExecuted, commandReturn] = await command.onCommand(Interaction);
     } catch (error) {
       console.error(error);
-      console.error(`Command ${command.name} encountered an error onCommand. Please investigate the above output.`)
+      console.error(
+        `Command ${command.name} encountered an error onCommand. Please investigate the above output.`
+      );
+
+      const embed = Bot.createEmbed({
+        title: "Command Error",
+        description: `Comand ${command.name} ran in to an error: ${error}.`,
+        color: Colors.Red,
+      })
 
       if (Interaction.replied) {
         return Interaction.editReply({
           content: "",
           files: [],
 
-          embeds: [
-            Bot.createEmbed({
-              title: "Command Error",
-              description: `Comand ${command.name} ran in to an error: ${error}.`,
-              color: Colors.Red
-            })
-          ]
-        })
+          embeds: [embed],
+        });
       } else {
         return Interaction.reply({
           content: "",
           files: [],
-          
-          embeds: [
-            Bot.createEmbed({
-              title: "Command Error",
-              description: `Command ${command.name} ran in to an error: ${error}.`,
-              color: Colors.Red
-            })
-          ],
-  
-          ephemeral: true
-        })
+
+          embeds: [embed],
+
+          ephemeral: true,
+        });
       }
     }
 
@@ -116,38 +125,34 @@ export default async (Bot, Interaction: BaseInteraction) => {
       await commandTracker.delete(member.id);
     } catch (error) {
       console.error(error);
-      console.warn(`Command Tracker failed to delete ${member.id}. Please investigate the above output.`)
+      console.warn(
+        `Command Tracker failed to delete ${member.id}. Please investigate the above output.`
+      );
     }
 
     if (!commandExecuted) {
+      const embed = Bot.createEmbed({
+        title: "Command Execution Failed",
+        description: `Command ${command.name} failed to execute: ${commandReturn}.`,
+        color: Colors.Red,
+      })
+
       if (Interaction.replied) {
         return Interaction.editReply({
           content: "",
           files: [],
-          
-          embeds: [
-            Bot.createEmbed({
-              title: "Command Execution Failed",
-              description: `Command ${command.name} failed to execute: ${commandReturn}.`,
-              color: Colors.Red
-            })
-          ]
-        })
+
+          embeds: [embed],
+        });
       } else {
         return Interaction.reply({
           content: "",
           files: [],
 
-          embeds: [
-            Bot.createEmbed({
-              title: "Command Execution Failed",
-              description: `Command ${command.name} failed to execute: ${commandReturn}.`,
-              color: Colors.Red
-            })
-          ],
-  
-          ephemeral: true
-        })
+          embeds: [embed],
+
+          ephemeral: true,
+        });
       }
     }
   }

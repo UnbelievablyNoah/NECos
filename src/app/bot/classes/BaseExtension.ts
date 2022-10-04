@@ -1,12 +1,12 @@
 export abstract class BaseExtension {
-    Bot = null
-    NECos = null
+  Bot = null;
+  NECos = null;
 
-    name = ""
-    description = ""
+  name = "";
+  description = "";
 
-    constructor(NECos) {
-        this.NECos = NECos;
-        this.Bot = NECos.bot;
-    }
+  constructor(NECos) {
+    this.NECos = NECos;
+    this.Bot = NECos.bot;
+  }
 }

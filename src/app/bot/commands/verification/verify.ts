@@ -8,15 +8,16 @@ export default class VerifyCommand extends BaseCommand {
   name = "verify";
   description =
     "Allows users to authenticate their discord accout through ROBLOX.";
-  cooldown = 10;
 
   constructor(Bot) {
     super(Bot);
   }
 
-  onCommand = async function (Bot, Interaction: CommandInteraction): Promise<[boolean, string]> {
-    await Interaction.reply("HI!")
+  onCommand = async function (
+    Interaction: CommandInteraction
+  ): Promise<[boolean, string]> {
+    await Interaction.reply("HI!");
 
-    return [false, "balls"];
+    return [false, ""];
   };
 }

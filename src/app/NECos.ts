@@ -25,8 +25,6 @@ import { Console } from "./modules/Console.js";
 import { Database } from "./modules/Database.js";
 import { Bot } from "./bot/Bot.js";
 
-// Initialize configuration
-
 // Instantiate NECos object
 const NECos = class NECos {
   debug = false;
@@ -61,6 +59,8 @@ const NECos = class NECos {
         this.console.error(`Discord bot failed to start. ${error}`);
       }
     }
+
+    this.console.ready(`NECos version ${this.version} successfully started.`);
   }
 };
 

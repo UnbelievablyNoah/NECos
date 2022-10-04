@@ -32,10 +32,10 @@ export default async (Bot) => {
       activities: [
         {
           name: "necos.dev | /help",
-          type: 0
-        }
-      ]
-    }
+          type: 0,
+        },
+      ],
+    };
 
     try {
       Bot.client.user.setPresence(presence);

@@ -23,19 +23,15 @@
 
 import Knex from "knex";
 import * as Configuration from "../../../config/dbconfig.js";
-export class Database {
+export class Database extends Knex.Client {
   NECos = null;
   console = null;
-  configuration = null;
-  database = null;
 
   constructor(NECos) {
+    super(Configuration.default[process.env.NODE_ENV]);
     this.NECos = NECos;
     this.console = NECos.console;
-    this.configuration = Configuration.default;
 
-    this.console.debug("Creating database pool...");
-    this.database = Knex(this.configuration[process.env.NODE_ENV]);
     this.console.connection(
       "Database pool created. Database connection ready."
     );

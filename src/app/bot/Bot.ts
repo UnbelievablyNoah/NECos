@@ -21,7 +21,7 @@
  * @param { typeof NECos }
  */
 
-// Decalre dirname
+// Declare dirname
 import * as path from "path";
 import { fileURLToPath } from "url";
 
