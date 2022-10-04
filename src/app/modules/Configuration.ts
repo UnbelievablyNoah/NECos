@@ -36,8 +36,19 @@ export class Configuration {
       // Attempt to read the configuration file from the specified path
       configString = readFileSync(this.fileName);
 
-      // Parse the toml data
-      this.configuration = parseTOML(configString);
+      // Parse the toml or json data
+      const fileExtension = fileName.split(".").pop();
+      switch (fileExtension) {
+        case "toml":
+          this.configuration = parseTOML(configString);
+          break;
+        case "json":
+          this.configuration = JSON.parse(configString);
+          break;
+        default:
+          throw new Error(`InvalidFileExtensionException occured on ${this.fileName}. Please ensure the fileName is typed correctly.`)
+          break;
+      }
     } catch (error) {
       throw new Error(
         `ParseException: configString failed to parse. Verify the syntax of ${this.fileName} and that the file exists.`
