@@ -46,7 +46,9 @@ export class Configuration {
           this.configuration = JSON.parse(configString);
           break;
         default:
-          throw new Error(`InvalidFileExtensionException occured on ${this.fileName}. Please ensure the fileName is typed correctly.`)
+          throw new Error(
+            `InvalidFileExtensionException occured on ${this.fileName}. Please ensure the fileName is typed correctly.`
+          );
           break;
       }
     } catch (error) {

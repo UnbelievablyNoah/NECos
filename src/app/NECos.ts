@@ -22,8 +22,11 @@
 import { readFileSync } from "fs";
 import { Configuration } from "./modules/Configuration.js";
 import { Console } from "./modules/Console.js";
-import { Database } from "./modules/Database.js";
+//import { Database } from "./modules/Database.js";
 import { Bot } from "./bot/Bot.js";
+
+import Knex from "knex";
+import * as dbConfig from "../../config/dbconfig.js";
 
 // Instantiate NECos object
 const NECos = class NECos {
@@ -47,7 +50,7 @@ const NECos = class NECos {
 
     // Initialize database
     this.console.debug("Initializing database");
-    this.database = new Database(this);
+    this.database = Knex(dbConfig.default[process.env.NODE_ENV]);
     this.console.debug("Database initialized");
 
     // Run bot if enabled

@@ -12,6 +12,7 @@ export abstract class BaseCommand {
   constructor(Bot) {
     this.Bot = Bot;
     this.NECos = Bot.NECos;
+    console.log(Bot);
   }
 
   onCommand = async function (

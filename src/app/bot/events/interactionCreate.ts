@@ -100,7 +100,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
         title: "Command Error",
         description: `Comand ${command.name} ran in to an error: ${error}.`,
         color: Colors.Red,
-      })
+      });
 
       if (Interaction.replied) {
         return Interaction.editReply({
@@ -135,7 +135,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
         title: "Command Execution Failed",
         description: `Command ${command.name} failed to execute: ${commandReturn}.`,
         color: Colors.Red,
-      })
+      });
 
       if (Interaction.replied) {
         return Interaction.editReply({
