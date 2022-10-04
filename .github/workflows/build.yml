@@ -41,4 +41,4 @@ jobs:
         mysql password: necos # optional, default is 
     - run: npm ci
     - run: cp -r config.example config
-    - run: NODE_ENV=ci ./necos start --debug
+    - run: npm run ci --if-present
