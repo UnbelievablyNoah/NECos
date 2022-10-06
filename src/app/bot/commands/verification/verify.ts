@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { User } from "./../../interfaces/User.js";
+import { User } from "./../../../interfaces/User.js";
 import {
   ActionRowBuilder,
   ButtonBuilder,

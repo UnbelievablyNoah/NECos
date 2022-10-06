@@ -4,7 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development npx ts-node-esm NECos.ts -- --debug",
-    "ci": "NODE_ENV=ci ./necos start --debug"
+    "ci": "NODE_ENV=ci ./necos start --debug",
+    "migrate:up": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:latest --knexfile config/dbconfig.ts",
+    "migrate:down": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:rollback --all --knexfile config/dbconfig.ts",
+    "migrate:make": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:make --knexfile config/dbconfig.ts"
   },
   "dependencies": {
     "chalk": "^5.0.1",

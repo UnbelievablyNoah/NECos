@@ -60,3 +60,7 @@ API configuration is for the REST API for external data access. This feature is 
 <h2> Running the application </h2>
 
 To run NECos, it's as simple as running `./necos start`, and optionally adding the `--debug` flag for extra output messages. (For **all** flags, see `./necos usage')`
+
+
+NOTE TO SELF: USE NODE_ENV=production NODE_OPTIONS="--loader ts-node/esm" knex migrate:make --knexfile config/dbconfig.ts create_guilds_table TO MAKE THINGS
+-sky

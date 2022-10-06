@@ -1,8 +1,7 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-exports.up = function (knex) {
+import { Knex } from "knex";
+
+
+export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("guilds", function (table) {
     table.increments("id");
     table.string("guild_id", 128).notNullable();
@@ -10,19 +9,17 @@ exports.up = function (knex) {
     table
       .text("command_permissions", "longtext")
       .notNullable()
-      .defaultsTo("{}");
+      .defaultTo("{}");
     table
       .text("verification_bind_data", "longtext")
       .notNullable()
-      .defaultsTo("[]");
-    table.text("mod_actions", "longtext").notNullable().defaultsTo("[]");
+      .defaultTo("[]");
+    table.text("mod_actions", "longtext").notNullable().defaultTo("[]");
   });
-};
+}
 
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-exports.down = function (knex) {
+
+export async function down(knex: Knex): Promise<void> {
   return knex.schema.dropTable("guilds");
-};
+}
+
