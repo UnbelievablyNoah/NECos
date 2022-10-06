@@ -1,10 +1,10 @@
-import { Knex } from 'knex';
+import Knex from 'knex';
 import { User } from './../../interfaces/User.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, CommandInteraction, ComponentType } from "discord.js";
 import { BaseCommand } from "../../classes/BaseCommand.js";
 
 import pkg, { PlayerInfo } from 'noblox.js';
-const { getIdFromUsername, getPlayerInfo, getPlayerThumbnail } = pkg;
+const { getIdFromUsername, getPlayerInfo, getPlayerThumbnail, getBlurb } = pkg;
 
 
 export default class VerifyCommand extends BaseCommand {
@@ -295,6 +295,191 @@ export default class VerifyCommand extends BaseCommand {
         return [true, ""]
       }
     }
+
+    const codeWords = ["teal", "red", "blue", "cyan", "orange", "pink", "green", "purple", "yellow"]
+    function generateCode(wordCount = 6) : string {
+      let string = [];
+
+      for (let i = 0; i < wordCount; i++) {
+        string.push(codeWords[Math.floor(Math.random() * codeWords.length)])
+      }
+
+      return string.join(" ")
+    }
+
+    var verificationCode = "";
+    var codeConfirmed = false;
+
+    while (!codeConfirmed) {
+      verificationCode = generateCode();
+      var codeMessage;
+
+      try {
+        codeConfirmed = await new Promise<boolean>(async (resolve, reject) => {
+          const interactionCollector = channel.createMessageComponentCollector({
+            filter: (interaction) => interaction.member.id === member.id,
+            time: 180_000,
+            componentType: ComponentType.Button,
+            maxComponents: 1
+          })
+    
+          interactionCollector.on('collect', async (interaction) => {
+            try {
+              await interaction.deferUpdate();
+            } catch (error) {}
+
+            switch (interaction.customId) {
+              case "done":
+                resolve(true)
+              case "regen":
+                resolve(false)
+              case "cancel":
+                reject()
+            }
+          })
+
+          interactionCollector.on('end', (collected) => {
+            if (collected.size == 0) {
+              reject();
+            }
+          })
+    
+          const actionRow = new ActionRowBuilder<ButtonBuilder>()
+            .addComponents([
+              new ButtonBuilder()
+                .setLabel("Done")
+                .setStyle(ButtonStyle.Success)
+                .setCustomId("done"),
+              new ButtonBuilder()
+                .setLabel("Regenerate Code")
+                .setStyle(ButtonStyle.Secondary)
+                .setCustomId("regen"),
+              new ButtonBuilder()
+                .setLabel("Cancel")
+                .setStyle(ButtonStyle.Danger)
+                .setCustomId("cancel"),
+            ])
+    
+          codeMessage = await channel.send(`Please enter the following code in your ROBLOX burb / bio. When you're done, press the above "done" button.`)
+          await Interaction.reply({
+            components: [actionRow],
+    
+            embeds: [
+              this.Bot.createEmbed({
+                title: "NECos Verification",
+                description: `Please enter the below code in your ROBLOX blurb / bio. When you're done, press "done".`,
+                fields: [
+                  {
+                    name: "Username",
+                    value: `${playerInfo.username != "" && playerInfo.username || "Unknown."}`,
+                    inline: true
+                  },
+                  {
+                    name: "Display Name",
+                    value: `${playerInfo.displayName != "" && playerInfo.displayName || "None."}`,
+                    inline: true
+                  },
+                  {
+                    name: "Join Date",
+                    value: `${playerInfo.joinDate.toString()}`,
+                    inline: true
+                  },
+                  {
+                    name: "Blurb / Bio",
+                    value: `${playerInfo.blurb != "" && playerInfo.blurb || "None."}`,
+                    inline: true
+                  },
+                  {
+                    name: "Verification Code",
+                    value: verificationCode,
+                    inline: false
+                  }
+                ],
+                footer: {
+                  text: "Prompt will automatically cancel after three minutes."
+                },
+    
+                color: Colors.Orange
+              })
+            ],
+          })
+        })
+
+        try {
+          await codeMessage.delete()
+        } catch (error) {};
+
+        if (!codeConfirmed) continue;
+        
+        codeConfirmed = await new Promise<boolean>(async (resolve, reject) => {
+          const blurb = await getBlurb(userId);
+          
+          playerInfo.blurb = blurb;
+
+          const codeFound = blurb.includes(verificationCode);
+
+          if (codeFound) {
+            resolve(true);
+          } else {
+            try {
+              const notFoundMessage = await channel.send(`A matching code was not found in the user's blurb / bio. Please try again.`)
+
+              setTimeout(notFoundMessage.delete, 10_000);
+            } catch (error) {}
+
+            resolve(false);
+          }
+        })
+      } catch (error) {
+        await Interaction.editReply({
+          components: [],
+          embeds: [
+            this.Bot.createEmbed({
+              title: "NECos Verification",
+              description: `Prompt cancelled or timed out.`,
+  
+              color: Colors.Red
+            })
+          ]
+        })
+
+        return [true, ""]
+      }
+    }
+
+    await Interaction.editReply({
+      components: [],
+      embeds: [
+        this.Bot.createEmbed({
+          title: "NECos Verification",
+          description: "Your account has successfully been verified with NECos. Please run /update to obtain roles.",
+          fields: [
+            {
+              name: "Username",
+              value: `${playerInfo.username != "" && playerInfo.username || "Unknown."}`,
+              inline: true
+            },
+            {
+              name: "Display Name",
+              value: `${playerInfo.displayName != "" && playerInfo.displayName || "None."}`,
+              inline: true
+            },
+            {
+              name: "Join Date",
+              value: `${playerInfo.joinDate.toString()}`,
+              inline: true
+            },
+            {
+              name: "Blurb / Bio",
+              value: `${playerInfo.blurb != "" && playerInfo.blurb || "None."}`,
+              inline: true
+            },
+          ],
+
+          color: Colors.Green
+        })
+      ]
+    })
 
     return [true, ""];
   };
