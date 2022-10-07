@@ -1,26 +1,54 @@
 import { Knex } from "knex";
 import { BaseCommand } from "../../classes/BaseCommand.js";
-import { SlashCommandStringOption } from "@discordjs/builders"
+
+import { SlashCommandStringOption, SlashCommandBooleanOption } from "@discordjs/builders"
+import { CommandInteraction } from "discord.js";
 
 import Noblox, { PlayerInfo } from "noblox.js";
 const { getRole } = Noblox;
 
 export default class VerifyCommand extends BaseCommand {
-  name = "verify";
+  name = "bind";
   description =
-    "Allows users to authenticate their discord accout through ROBLOX.";
+    "Allows guild administrators to bind ROBLOX data to guild roles.";
   cooldown = 5;
+  defaultPermission = "ADMINISTRATOR";
 
   constructor(Bot) {
     super(Bot);
   }
 
-  options: [
+  options = [
     new SlashCommandStringOption()
       .setName("type")
       .setDescription("user OR group OR gamepass")
       .setRequired(true)
-      .setChoices("user", "group", "gamepass")
+      .addChoices(
+        {
+          name: "user",
+          value: "user"
+        },
+
+        {
+          name: "group",
+          value: "group"
+        },
+
+        {
+          name: "gamepass",
+          value: "gamepass"
+        }
+      ),
+
+   new SlashCommandStringOption()
+      .setName("data")
+      .setDescription("userId OR GroupId:MinRank:MaxRank? OR gamepassId")
+      .setRequired(true),
+
+   new SlashCommandBooleanOption()
+      .setName("default")
+      .setDescription("Is the role granted to everyone?")
+      .setRequired(false)
   ]
 
   onCommand = async function (
