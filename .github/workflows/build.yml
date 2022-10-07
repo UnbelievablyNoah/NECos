@@ -35,14 +35,14 @@ jobs:
         host port: 3306 # optional, default is 3306
         container port: 3306
         collation server: utf8mb4_unicode_ci
-        mysql version: latest
-        mysql root password: password
+        mariadb version: latest
+        mariadb root password: password
         # MYSQL_DATABASE - name for the default database that is created
-        mysql database: NECos_ci # optional, default is 
+        mariadb database: NECos_ci # optional, default is 
         # MYSQL_USER - create the specified user with superuser power for created database
-        mysql user: NECos # optional, default is 
+        mariadb user: NECos # optional, default is 
         # MYSQL_PASSWORD - specified superuser password which user is power for created database
-        mysql password: necos # optional, default is 
+        mariadb password: necos # optional, default is 
     - run: npm ci
     - run: cp -r config.example config
     - run: NODE_ENV=ci npm run migrate:up
