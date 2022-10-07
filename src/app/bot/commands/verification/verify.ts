@@ -120,6 +120,7 @@ export default class VerifyCommand extends BaseCommand {
     var playerInfo: PlayerInfo;
     var thumbnailUrl = "";
     var userdataConfirmed = false;
+    var embedFields = [];
     var usernameMessage;
 
     while (!userdataConfirmed) {
@@ -186,11 +187,11 @@ export default class VerifyCommand extends BaseCommand {
       } catch (error) {
         var replied = false;
 
-        const messageContent = `No user was found matching username ${username}. Please ensure you typed the username correctly, and sent it again.`
+        const messageContent = `No user was found matching username ${username}. Please ensure you typed the username correctly, and sent it again.`;
 
         try {
           await usernameMessage.reply(messageContent);
-          replied = true;	 
+          replied = true;
         } catch (error) {}
 
         if (!replied) {
@@ -204,6 +205,33 @@ export default class VerifyCommand extends BaseCommand {
 
         continue;
       }
+
+      embedFields = [
+        {
+          name: "Username",
+          value: `${
+            (playerInfo.username != "" && playerInfo.username) || "Unknown."
+          }`,
+          inline: true,
+        },
+        {
+          name: "Display Name",
+          value: `${
+            (playerInfo.displayName != "" && playerInfo.displayName) || "None."
+          }`,
+          inline: true,
+        },
+        {
+          name: "Join Date",
+          value: `${playerInfo.joinDate.toString()}`,
+          inline: true,
+        },
+        {
+          name: "Blurb / Bio",
+          value: `${(playerInfo.blurb != "" && playerInfo.blurb) || "None."}`,
+          inline: true,
+        },
+      ];
 
       try {
         var thumbnailData = await getPlayerThumbnail(
@@ -275,37 +303,7 @@ export default class VerifyCommand extends BaseCommand {
                 this.Bot.createEmbed({
                   title: "NECos Verification",
                   description: `Please verify the below information corresponds to your ROBLOX account.`,
-                  fields: [
-                    {
-                      name: "Username",
-                      value: `${
-                        (playerInfo.username != "" && playerInfo.username) ||
-                        "Unknown."
-                      }`,
-                      inline: true,
-                    },
-                    {
-                      name: "Display Name",
-                      value: `${
-                        (playerInfo.displayName != "" &&
-                          playerInfo.displayName) ||
-                        "None."
-                      }`,
-                      inline: true,
-                    },
-                    {
-                      name: "Join Date",
-                      value: `${playerInfo.joinDate.toString()}`,
-                      inline: true,
-                    },
-                    {
-                      name: "Blurb / Bio",
-                      value: `${
-                        (playerInfo.blurb != "" && playerInfo.blurb) || "None."
-                      }`,
-                      inline: true,
-                    },
-                  ],
+                  fields: embedFields,
                   footer: {
                     text: "Prompt will automatically cancel after one minute.",
                   },
@@ -415,7 +413,7 @@ export default class VerifyCommand extends BaseCommand {
           );
 
           var replied = false;
-          var messageContent = `Please enter the following code in your ROBLOX burb / bio. When you're done, press the above "done" button. \`${verificationCode}\``
+          var messageContent = `Please enter the following code in your ROBLOX burb / bio. When you're done, press the above "done" button. \`${verificationCode}\``;
 
           try {
             codeMessage = await usernameMessage.reply(messageContent);
@@ -436,42 +434,7 @@ export default class VerifyCommand extends BaseCommand {
               this.Bot.createEmbed({
                 title: "NECos Verification",
                 description: `Please enter the below code in your ROBLOX blurb / bio. When you're done, press "done".`,
-                fields: [
-                  {
-                    name: "Username",
-                    value: `${
-                      (playerInfo.username != "" && playerInfo.username) ||
-                      "Unknown."
-                    }`,
-                    inline: true,
-                  },
-                  {
-                    name: "Display Name",
-                    value: `${
-                      (playerInfo.displayName != "" &&
-                        playerInfo.displayName) ||
-                      "None."
-                    }`,
-                    inline: true,
-                  },
-                  {
-                    name: "Join Date",
-                    value: `${playerInfo.joinDate.toString()}`,
-                    inline: true,
-                  },
-                  {
-                    name: "Blurb / Bio",
-                    value: `${
-                      (playerInfo.blurb != "" && playerInfo.blurb) || "None."
-                    }`,
-                    inline: true,
-                  },
-                  {
-                    name: "Verification Code",
-                    value: verificationCode,
-                    inline: false,
-                  },
-                ],
+                fields: embedFields,
                 footer: {
                   text: "Prompt will automatically cancel after three minutes.",
                 },
@@ -491,7 +454,9 @@ export default class VerifyCommand extends BaseCommand {
         codeConfirmed = await new Promise<boolean>(async (resolve, reject) => {
           const blurb = await getBlurb(userId);
 
-          playerInfo.blurb = blurb;
+          embedFields[3].value = `${
+            (playerInfo.blurb != "" && playerInfo.blurb) || "None."
+          }`;
 
           const codeFound = blurb.includes(verificationCode);
 
@@ -499,10 +464,12 @@ export default class VerifyCommand extends BaseCommand {
             resolve(true);
           } else {
             var replied = false;
-            var messageContent = `A matching code was not found in user's blurb / bio. Please try again.`
+            var messageContent = `A matching code was not found in user's blurb / bio. Please try again.`;
 
             try {
-              const notFoundUserMessage = await usernameMessage.reply(messageContent);
+              const notFoundUserMessage = await usernameMessage.reply(
+                messageContent
+              );
 
               setTimeout(notFoundUserMessage.delete, 10_000);
 
@@ -511,8 +478,10 @@ export default class VerifyCommand extends BaseCommand {
 
             if (!replied) {
               try {
-                const interactionReply = await Interaction.fetchReply();		   
-                const notFoundInteractionMessage = await interactionReply.reply(messageContent);
+                const interactionReply = await Interaction.fetchReply();
+                const notFoundInteractionMessage = await interactionReply.reply(
+                  messageContent
+                );
 
                 setTimeout(notFoundInteractionMessage.delete, 10_000);
               } catch (error) {}
@@ -573,35 +542,7 @@ export default class VerifyCommand extends BaseCommand {
           title: "NECos Verification",
           description:
             "Your account has successfully been verified with NECos. Please run /update to obtain roles.",
-          fields: [
-            {
-              name: "Username",
-              value: `${
-                (playerInfo.username != "" && playerInfo.username) || "Unknown."
-              }`,
-              inline: true,
-            },
-            {
-              name: "Display Name",
-              value: `${
-                (playerInfo.displayName != "" && playerInfo.displayName) ||
-                "None."
-              }`,
-              inline: true,
-            },
-            {
-              name: "Join Date",
-              value: `${playerInfo.joinDate.toString()}`,
-              inline: true,
-            },
-            {
-              name: "Blurb / Bio",
-              value: `${
-                (playerInfo.blurb != "" && playerInfo.blurb) || "None."
-              }`,
-              inline: true,
-            },
-          ],
+          fields: embedFields,
 
           color: Colors.Green,
         }),

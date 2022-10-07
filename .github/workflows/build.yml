@@ -33,6 +33,10 @@ jobs:
       with:
         # The port of host
         host port: 3306 # optional, default is 3306
+        container port: 3306
+        collation server: utf8mb4_unicode_ci
+        mysql version: latest
+        mysql root password: password
         # MYSQL_DATABASE - name for the default database that is created
         mysql database: NECos_ci # optional, default is 
         # MYSQL_USER - create the specified user with superuser power for created database
