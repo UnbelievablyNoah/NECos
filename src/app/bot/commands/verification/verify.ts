@@ -348,6 +348,7 @@ export default class VerifyCommand extends BaseCommand {
       "purple",
       "yellow",
     ];
+    
     function generateCode(wordCount = 6): string {
       let string = [];
 
