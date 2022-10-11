@@ -33,19 +33,11 @@ NECos is written in TypeScript, but it also ships with ts-node as a dependency s
 
 <h2> Installation </h2>
 
-<<<<<<< HEAD
 1. Clone the [NECos](https://github.com/Nuclear-Engineering-Co/NECos-Bun/) repository to whatever directory you'd like. <br />
 2. Run `npm install`, or `yarn install`. **PNPM has NOT been tested.** <br />
 3. Copy the `config.example` directory to `config`. **The application will NOT start without valid configuration.** See `configuration` below. <br />
 4. Initialize the database by running `NODE_OPTIONS="--loader ts-node/esm" knex migrate:latest --knexfile config/dbconfig.ts` <br />
 5. You're done! <br />
-=======
-  1. Clone the [NECos](https://github.com/Nuclear-Engineering-Co/NECos/) repository to whatever directory you'd like. <br />
-  2. Run `npm install`, or `yarn install`. **PNPM has NOT been tested.** <br />
-  3. Copy the `config.example` directory to `config`. **The application will NOT start without valid configuration.** See `configuration` below. <br />
-  4. Initialize the database by running `NODE_OPTIONS="--loader ts-node/esm" knex migrate:latest --knexfile config/dbconfig.ts` <br />
-  5. You're done! <br />
->>>>>>> 4ea066eadb82ef71cb5f2db165a87e43451f2851
 
 <h2> Configuration </h2>
 
