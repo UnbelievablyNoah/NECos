@@ -2,7 +2,7 @@
  * @name Console.ts
  * @description NECos console output class
  * @author imskyyc
- * @repository https://github.com/Nuclear-Engineering-Co/NECos-Bun
+ * @repository https://github.com/Nuclear-Engineering-Co/NECos
  * @license AGPL3
  * @copyright Copyright (C) 2022 imskyyc (https://github.com/imskyyc)
    This program is free software: you can redistribute it and/or modify
