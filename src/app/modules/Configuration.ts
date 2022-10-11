@@ -23,6 +23,11 @@
 
 import { parse as parseTOML } from "toml";
 import { readFileSync } from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class Configuration {
   fileName = "";
@@ -34,7 +39,7 @@ export class Configuration {
     var configString;
     try {
       // Attempt to read the configuration file from the specified path
-      configString = readFileSync(this.fileName);
+      configString = readFileSync(`${__dirname}/../../../${this.fileName}`);
 
       // Parse the toml or json data
       const fileExtension = fileName.split(".").pop();

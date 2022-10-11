@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { User } from "./../../../interfaces/User.js";
+import { User } from "../../../Interfaces.js";
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -17,6 +17,8 @@ export default class VerifyCommand extends BaseCommand {
   name = "verify";
   description =
     "Allows users to authenticate their discord accout through ROBLOX.";
+  usage = "/verify";
+
   cooldown = 5;
 
   constructor(Bot) {
@@ -348,7 +350,7 @@ export default class VerifyCommand extends BaseCommand {
       "purple",
       "yellow",
     ];
-    
+
     function generateCode(wordCount = 6): string {
       let string = [];
 

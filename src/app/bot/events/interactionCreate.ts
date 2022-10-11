@@ -40,11 +40,16 @@ export default async (Bot, Interaction: BaseInteraction) => {
   if (Interaction.isCommand() && Bot.commands) {
     // Handle command interactons
     const commands: Collection<string, Collection<string, any>> = Bot.commands;
-    const command = commands
-      .find((category) =>
-        category.find((command) => command.name == Interaction.commandName)
-      )
-      .first();
+    let command = null;
+
+    for (const key of Array.from(commands.keys())) {
+      const category = commands.get(key);
+      command = category.find(
+        (command) => command.name === Interaction.commandName
+      );
+
+      if (command) break;
+    }
 
     // check cooldown
     if (command.cooldown) {

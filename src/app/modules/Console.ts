@@ -48,6 +48,8 @@ export class Console {
     return `${month}-${date} ${hours}:${minutes}:${seconds}`;
   };
 
+  log = console.log;
+
   info = function (...output: Array<string>) {
     for (const string of output) {
       console.log(

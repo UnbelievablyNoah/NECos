@@ -14,3 +14,10 @@ export interface Guild {
   verification_bind_data: string;
   mod_actions: string;
 }
+
+export interface BoundRole {
+  role_id: string;
+  type: string;
+  data: string;
+  isDefault: boolean;
+}

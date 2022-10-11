@@ -25,17 +25,28 @@ import { readdir } from "fs/promises";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST, Routes, Collection } from "discord.js";
 
+import * as path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export default async (Bot) => {
   const console = Bot.console;
-  const commandsDir = await readdir("./src/app/bot/commands");
+  const commandsDir = await readdir(`${__dirname}/../commands`);
   const commands = new Collection();
   const commandJSON = [];
 
+  console.debug("Reading commands directory...");
+
   for (const directory of commandsDir) {
     const categoryArray = new Collection();
-    const categoryDir = await readdir(`./src/app/bot/commands/${directory}`);
+    const categoryDir = await readdir(`${__dirname}/../commands/${directory}`);
+
+    console.debug(`Reading category ${directory}...`);
 
     for (const file of categoryDir) {
+      console.debug(`Loading command ${file} of category ${directory}...`);
       if (categoryArray.has(file)) {
         console.warn(
           `Command Category ${directory} already contains a key matching ${file}. Verify you have no duplicate commands`
@@ -44,8 +55,10 @@ export default async (Bot) => {
         continue;
       }
 
+      console.debug("Constructing command...");
+
       const command = new (
-        await import(`../commands/${directory}/${file}`)
+        await import(`${__dirname}/../commands/${directory}/${file}`)
       ).default(Bot);
       categoryArray.set(command.name, command);
 
@@ -58,6 +71,8 @@ export default async (Bot) => {
         SlashCommand.options.push(option);
       }
       commandJSON.push(SlashCommand.toJSON());
+
+      console.debug("Command constructed!");
     }
 
     commands.set(directory, categoryArray);

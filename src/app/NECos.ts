@@ -28,6 +28,12 @@ import { Bot } from "./bot/Bot.js";
 import Knex from "knex";
 import * as dbConfig from "../../config/dbconfig.js";
 
+import * as path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Instantiate NECos object
 const NECos = class NECos {
   debug = false;
@@ -41,7 +47,7 @@ const NECos = class NECos {
     this.debug =
       process.argv.includes("--debug") || process.argv.includes("-D");
     this.version =
-      readFileSync(".git/refs/heads/master").toString().substring(0, 7) ||
+      readFileSync(`${__dirname}/../../.git/refs/heads/master`).toString().substring(0, 7) ||
       "Unknown";
 
     this.console = new Console(this);

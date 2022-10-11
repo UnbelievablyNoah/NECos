@@ -4,8 +4,10 @@ export abstract class BaseCommand {
   Bot = null;
   NECos = null;
 
-  name = "";
-  description = "";
+  name = "No name defined.";
+  description = "No description defined.";
+  usage = "No usage defined.";
+
   options = [];
   defaultPermissions = [];
 
