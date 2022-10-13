@@ -1,13 +1,25 @@
 #!/bin/bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-FILE="$SCRIPT_DIR/../../../NECos.ts"
+DEVFILE="$SCRIPT_DIR/../../../NECos.ts"
+PRODFILE="$SCRIPT_DIR/../../../build/NECos.js"
 
 # check global ts node installation
 TS_NODE_INSTALLED=$(npm list ts-node)
 
-if [[ "$TS_NODE_INSTALLED" == *empty* ]]; then
+if [[ ! "${FLAGS[*]}" =~ "${--dev}" ]] && [[ ! "${FLAGS[*]}" =~ "${--ci}" ]]; then
+  if [ ! -e "$PRODFILE" ]; then
+    echo "NECos build not found in project root! Did you run ./necos build?"
+  else
+    export NODE_ENV=production
+
+    node "$PRODFILE" -- $FLAGS
+  fi
+else
+  echo "noprod"
+  if [[ "$TS_NODE_INSTALLED" == *empty* ]]; then
     echo "ts-node is not installed. Please install ts-node to run NECos."
     return
-fi
+  fi
 
-npx ts-node-esm "$FILE" -- $FLAGS
+  npx ts-node-esm "$DEVFILE" -- $FLAGS
+fi

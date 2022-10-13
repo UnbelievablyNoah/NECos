@@ -44,4 +44,5 @@ jobs:
       - run: npm ci
       - run: cp -r config.example config
       - run: NODE_ENV=ci npm run migrate:up
+      - run: npm run build
       - run: npm run ci --if-present

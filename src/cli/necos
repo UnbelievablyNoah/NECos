@@ -37,6 +37,9 @@ for FLAG in ${FLAGS[@]}; do
       --dev)
         export NODE_ENV=development
         ;;
+      --ci)
+        export NODE_ENV=ci
+        ;;
     esac
 done
 
