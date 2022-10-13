@@ -1,0 +1,7 @@
+#!/bin/bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+WORKDIR="$SCRIPT_DIR/../../../";
+
+cd "$WORKDIR";
+
+rm -rf ./build && tsc && cp config/application.toml build/config
