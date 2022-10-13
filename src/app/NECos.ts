@@ -22,7 +22,6 @@
 import { readFileSync } from "fs";
 import { Configuration } from "./modules/Configuration.js";
 import { Console } from "./modules/Console.js";
-//import { Database } from "./modules/Database.js";
 import { Bot } from "./bot/Bot.js";
 
 import Knex from "knex";
@@ -30,6 +29,7 @@ import * as dbConfig from "../../config/dbconfig.js";
 
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { exec } from "child_process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +37,7 @@ const __dirname = path.dirname(__filename);
 // Instantiate NECos object
 const NECos = class NECos {
   debug = false;
+  exited = false;
   configuration = new Configuration("config/application.toml").configuration;
   bot = null;
   version = "";
@@ -44,11 +45,38 @@ const NECos = class NECos {
   database = null;
 
   constructor() {
+    this.construct();
+  }
+
+  construct = async () => {
+    // Process handles
+    if (__filename.endsWith(".js")) {
+      process.env.NODE_ENV = "production";
+    }
+
+    if (!process.env.NODE_ENV) {
+      process.env.NODE_ENV = "development";
+    }
+
+    process.on("SIGINT", this.exit);
+    process.on("SIGTERM", this.exit);
+    process.on("uncaughtException", this.exit);
+
     this.debug =
       process.argv.includes("--debug") || process.argv.includes("-D");
-    this.version =
-      readFileSync(`${__dirname}/../../.git/refs/heads/master`).toString().substring(0, 7) ||
-      "Unknown";
+
+    // try git rev-parse HEAD
+    try {
+      await new Promise<void>((resolve, reject) => {
+        exec("git rev-parse HEAD", (error, stdout, stderr) => {
+          this.version = stdout.toString().substring(0, 7);
+
+          resolve();
+        });
+      });
+    } catch (error) {
+      this.version = "Unknown";
+    }
 
     this.console = new Console(this);
     this.console.debug("Console class loaded.");
@@ -70,7 +98,30 @@ const NECos = class NECos {
     }
 
     this.console.ready(`NECos version ${this.version} successfully started.`);
-  }
+  };
+
+  exit = async (signal) => {
+    this.console.debug(`EXITING WITH CODE ${signal}`);
+
+    if (this.bot) {
+      try {
+        await this.bot.client.user.setPresence({
+          status: "offline",
+          activities: [],
+        });
+      } catch (error) {
+        this.console.log(error);
+      }
+    }
+
+    try {
+      this.database.destroy();
+    } catch (error) {}
+
+    this.console.info(`NECos exited.`);
+
+    process.exit(signal);
+  };
 };
 
 export default new NECos();

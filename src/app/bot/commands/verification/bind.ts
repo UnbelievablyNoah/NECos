@@ -66,7 +66,8 @@ export default class BindCommand extends BaseCommand {
   onCommand = async function (
     Interaction: CommandInteraction
   ): Promise<[boolean, string]> {
-    if (!Interaction.inCachedGuild() || !Interaction.isChatInputCommand()) return;
+    if (!Interaction.inCachedGuild() || !Interaction.isChatInputCommand())
+      return;
 
     await Interaction.deferReply();
 
@@ -98,16 +99,21 @@ export default class BindCommand extends BaseCommand {
 
     const bindData = await JSON.parse(guildData.verification_bind_data);
 
-    const existingRole = bindData.find(role => role.role_id == role.id && role.type == roleType && role.data == roleData);
+    const existingRole = bindData.find(
+      (role) =>
+        role.role_id == role.id &&
+        role.type == roleType &&
+        role.data == roleData
+    );
     if (existingRole) {
       await Interaction.editReply({
         embeds: [
           this.Bot.createEmbed({
             title: "Rolebind",
             description: `A role matching ${roleType} with data ${roleData} bound to role <@&existingRole.role_id> was already found. If you want to toggle its \`default\` status, run /setdefault`,
-            color: Colors.Red
-          })
-        ]
+            color: Colors.Red,
+          }),
+        ],
       });
 
       return;
@@ -119,6 +125,11 @@ export default class BindCommand extends BaseCommand {
       data: roleData,
       isDefault: (roleDefault && roleDefault.value == true) || false,
     };
+
+    bindData.push(boundRole);
+    guildData.verification_bind_data = JSON.stringify(bindData);
+
+    guildTable.where("guild_id", guild.id.toString()).update(guildData);
 
     return [true, ""];
   };
