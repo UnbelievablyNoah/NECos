@@ -1,6 +1,6 @@
 import { Knex } from "knex";
 import { BaseCommand } from "../../classes/BaseCommand.js";
-import { Guild, User, BoundRole } from "../../../Interfaces.js";
+import { Guild, BoundRole } from "../../../Interfaces.js";
 
 import {
   SlashCommandStringOption,
@@ -8,9 +8,6 @@ import {
   SlashCommandRoleOption,
 } from "@discordjs/builders";
 import { CommandInteraction, PermissionFlagsBits, Colors } from "discord.js";
-
-import Noblox from "noblox.js";
-const { getRole } = Noblox;
 
 export default class BindCommand extends BaseCommand {
   name = "bind";
@@ -71,11 +68,7 @@ export default class BindCommand extends BaseCommand {
 
     await Interaction.deferReply();
 
-    const console = this.Bot.console;
-
     const guild = Interaction.guild;
-    const member = Interaction.member;
-    const channel = Interaction.channel;
     const options = Interaction.options;
 
     const database: Knex = this.NECos.database;
@@ -98,38 +91,52 @@ export default class BindCommand extends BaseCommand {
     }
 
     const bindData = await JSON.parse(guildData.verification_bind_data);
+    const existingRole = bindData.find((role) => role.role_id == role.id.toString());
 
-    const existingRole = bindData.find(
-      (role) =>
-        role.role_id == role.id &&
-        role.type == roleType &&
-        role.data == roleData
-    );
     if (existingRole) {
-      await Interaction.editReply({
-        embeds: [
-          this.Bot.createEmbed({
-            title: "Rolebind",
-            description: `A role matching ${roleType} with data ${roleData} bound to role <@&existingRole.role_id> was already found. If you want to toggle its \`default\` status, run /setdefault`,
-            color: Colors.Red,
-          }),
-        ],
-      });
+      const existingBind = existingRole.binds.find(bind => bind.type == roleType && bind.data == roleData);
+      if (existingBind) {
+        await Interaction.editReply({
+          embeds: [
+            this.Bot.createEmbed({
+              title: "Rolebind",
+              description: `A role matching bind type \`${roleType}\` with data \`${roleData}\` bound to role <@&${role.id.toString()}> was already found. If you want to toggle its \`default\` status, run /setdefault.`,
+              color: Colors.Red,
+            }),
+          ],
+        });
 
-      return;
+        return [true, ""];
+      }
     }
 
-    const boundRole: BoundRole = {
+    const boundRole: BoundRole = existingRole || {
       role_id: role.id.toString(),
-      type: roleType,
-      data: roleData,
+      binds: [],
       isDefault: (roleDefault && roleDefault.value == true) || false,
-    };
+    }
+
+    boundRole.binds.push({
+      type: roleType,
+      data: roleData
+    })
 
     bindData.push(boundRole);
     guildData.verification_bind_data = JSON.stringify(bindData);
+    
+    await guildTable.where("guild_id", guild.id.toString()).update(guildData);
 
-    guildTable.where("guild_id", guild.id.toString()).update(guildData);
+    try {
+      await Interaction.editReply({
+        embeds: [
+          this.Bot.createEmbed({
+            color: Colors.Green,
+            title: "Rolebind",
+            description: `Successfully created bind with role <@&${role.id}> to type \`${roleType}\` with data \`${roleData}\`. (isDefault: \`${boundRole.isDefault}\`)`
+          })
+        ]
+      })
+    } catch (error) {}
 
     return [true, ""];
   };

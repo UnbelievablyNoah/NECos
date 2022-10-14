@@ -30,12 +30,15 @@ const __dirname = path.dirname(__filename);
 
 import { Collection, Client, GatewayIntentBits as Intents } from "discord.js";
 import { readdirSync } from "fs";
+import { CachedUserData } from "../Interfaces.js";
+
 export class Bot {
   NECos = null;
   console = null;
   configuration = null;
   client = null;
   commands = null;
+  userCache: Array<CachedUserData> = [];
 
   // Declare utility functions
   generatePresence = null;
