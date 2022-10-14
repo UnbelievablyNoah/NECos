@@ -6,6 +6,17 @@ export interface User {
   updated_at: string;
 }
 
+export interface OwnedAsset {
+  type: string;
+  gameId: number;
+  assetId: number;
+}
+
+export interface CachedUserData {
+  groups: { [groupId: number]: number };
+  ownedAssets: Array<OwnedAsset>;
+}
+
 export interface Guild {
   id: number;
   guild_id: string;
@@ -15,9 +26,13 @@ export interface Guild {
   mod_actions: string;
 }
 
+export interface RoleBindData {
+  type: string,
+  data: string
+}
+
 export interface BoundRole {
-  role_id: string;
-  type: string;
-  data: string;
+  role_id: string,
+  binds: Array<RoleBindData>,
   isDefault: boolean;
 }

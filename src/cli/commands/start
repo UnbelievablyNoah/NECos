@@ -6,7 +6,7 @@ PRODFILE="$SCRIPT_DIR/../../../build/NECos.js"
 # check global ts node installation
 TS_NODE_INSTALLED=$(npm list ts-node)
 
-if [[ ! "${FLAGS[*]}" =~ "${--dev}" ]] && [[ ! "${FLAGS[*]}" =~ "${--ci}" ]]; then
+if [[ "${FLAGS[*]}" =~ "${--dev}" ]] && [[ "${FLAGS[*]}" =~ "${--ci}" ]]; then
   if [ ! -e "$PRODFILE" ]; then
     echo "NECos build not found in project root! Did you run ./necos build?"
   else
