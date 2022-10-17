@@ -16,8 +16,7 @@ export default class BindCommand extends BaseCommand {
   usage =
     '/bind type:("user" OR "group" data:("userId: number" OR "groupId:minRank:maxRank?") default: boolean(true/false)';
 
-  cooldown = 5;
-  defaultPermission = [PermissionFlagsBits.ManageRoles];
+  defaultPermission = [PermissionFlagsBits.Administrator];
 
   constructor(Bot) {
     super(Bot);
@@ -91,7 +90,7 @@ export default class BindCommand extends BaseCommand {
     }
 
     const bindData = await JSON.parse(guildData.verification_bind_data);
-    const existingRole = bindData.find((role) => role.role_id == role.id.toString());
+    const existingRole = bindData.find((r) => r.role_id == role.id.toString());
 
     if (existingRole) {
       const existingBind = existingRole.binds.find(bind => bind.type == roleType && bind.data == roleData);
@@ -121,7 +120,7 @@ export default class BindCommand extends BaseCommand {
       data: roleData
     })
 
-    bindData.push(boundRole);
+    if (!existingRole) bindData.push(boundRole);
     guildData.verification_bind_data = JSON.stringify(bindData);
     
     await guildTable.where("guild_id", guild.id.toString()).update(guildData);

@@ -23,7 +23,7 @@
 
 export default async (Bot) => {
   // Load commands (try-catches are handled in the function)
-  await Bot.loadCommands();
+  await Bot.loadCommands(true);
 
   // Start presence thread
   async function setPresence() {

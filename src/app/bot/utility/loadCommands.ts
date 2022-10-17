@@ -31,7 +31,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default async (Bot) => {
+export default async (Bot, pushToRest: boolean) => {
   const console = Bot.console;
   const commandsDir = await readdir(`${__dirname}/../commands`);
   const commands = new Collection();
@@ -78,20 +78,22 @@ export default async (Bot) => {
     commands.set(directory, categoryArray);
   }
 
-  try {
-    console.debug("Spawning Discord REST API");
-    const API = new REST({ version: "10" }).setToken(
-      Bot.configuration.user.token
-    );
-
-    console.debug("Pushing SlashCommands to Discord REST.");
-    await API.put(Routes.applicationCommands(Bot.client.user.id), {
-      body: commandJSON,
-    });
-
-    console.success("Successfully pushed SlashCommands to Discord REST API");
-  } catch (error) {
-    console.error(`Failed to push SlashCommands to Discord API! ${error}`);
+  if (pushToRest) {
+    try {
+      console.debug("Spawning Discord REST API");
+      const API = new REST({ version: "10" }).setToken(
+        Bot.configuration.user.token
+      );
+  
+      console.debug("Pushing SlashCommands to Discord REST.");
+      await API.put(Routes.applicationCommands(Bot.client.user.id), {
+        body: commandJSON,
+      });
+  
+      console.success("Successfully pushed SlashCommands to Discord REST API");
+    } catch (error) {
+      console.error(`Failed to push SlashCommands to Discord API! ${error}`);
+    }
   }
 
   Bot.commands = commands;

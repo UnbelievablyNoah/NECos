@@ -6,7 +6,7 @@ import { User, Guild, CachedUserData } from "../../../Interfaces.js";
 import Noblox from "noblox.js";
 const { getRankInGroup } = Noblox;
 
-export default class BindCommand extends BaseCommand {
+export default class UpdateCommand extends BaseCommand {
   name = "update";
   description =
     "Allows users to re-obtain roles, and reset their nickname based on the guild's ROBLOX bind data.";
@@ -29,7 +29,6 @@ export default class BindCommand extends BaseCommand {
 
     const guild = Interaction.guild;
     const member = Interaction.member;
-    const options = Interaction.options;
 
     const database: Knex = this.NECos.database;
 
@@ -100,7 +99,7 @@ export default class BindCommand extends BaseCommand {
               let groupRank = userData.groups[groupId];
               if (!groupRank) {
                 try {
-                  groupRank = await getRankInGroup(user.roblox_id, groupId);
+                  groupRank = await getRankInGroup(user.roblox_id, parseInt(groupId));
                   userData.groups[groupId] = groupRank;
                 } catch (error) {
                   groupRank = 0;
@@ -124,17 +123,26 @@ export default class BindCommand extends BaseCommand {
         }
       }
 
-      if (!canGetRole) continue;
-
-      const role = await guild.roles.resolve(boundRole.role_id);
-      if (role) {
-        try {
-          await member.roles.add(role);
-        } catch (error) {
-          errors.push(`Error applying role: ${error}`);
+      if (canGetRole) {
+        const role = await guild.roles.resolve(boundRole.role_id);
+        if (role) {
+          try {
+            await member.roles.add(role);
+          } catch (error) {
+            errors.push(`Error applying role: ${error}`);
+          }
+        } else {
+          errors.push(`A role matching ${boundRole.role_id} was not found.`);
         }
       } else {
-        errors.push(`A role matching ${boundRole.role_id} was not found.`);
+        const role = await member.roles.resolve(boundRole.role_id);
+        if (role) {
+          try {
+            await member.roles.remove(role);
+          } catch (error) {
+            errors.push(`Error removing role: ${error}`)
+          }
+        }
       }
     }
 
