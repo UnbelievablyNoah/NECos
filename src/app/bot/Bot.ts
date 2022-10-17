@@ -105,7 +105,9 @@ export class Bot {
     }
 
     // Log in
-    if (process.env.NODE_ENV != "ci") {
+    if (process.env.NODE_ENV == "ci") {
+      this.loadCommands(false); // Test commands
+    } else {
       this.client.login(this.configuration.user.token);
     }
   };
