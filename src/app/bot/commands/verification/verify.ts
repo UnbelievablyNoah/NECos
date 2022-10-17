@@ -416,7 +416,7 @@ export default class VerifyCommand extends BaseCommand {
           );
 
           var replied = false;
-          var messageContent = `Please enter the following code in your ROBLOX burb / bio. When you're done, press the above "done" button. \`${verificationCode}\``;
+          var messageContent = `Please enter the following code in your ROBLOX blurb / bio. When you're done, press the above "done" button. \`${verificationCode}\``;
 
           try {
             codeMessage = await usernameMessage.reply(messageContent);

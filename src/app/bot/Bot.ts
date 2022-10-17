@@ -28,7 +28,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-import { Collection, Client, GatewayIntentBits as Intents } from "discord.js";
+import { Collection, Client, GatewayIntentBits as Intents, GuildMember } from "discord.js";
 import { readdirSync } from "fs";
 import { CachedUserData } from "../Interfaces.js";
 
@@ -109,4 +109,12 @@ export class Bot {
       this.client.login(this.configuration.user.token);
     }
   };
+
+  cacheUser = async (member: GuildMember, userData: CachedUserData) => {
+    this.userCache[member.id.toString()] = userData;
+
+    setTimeout(() => {
+      delete this.userCache[member.id.toString()];
+    }, 60_000 * 5);
+  }
 }

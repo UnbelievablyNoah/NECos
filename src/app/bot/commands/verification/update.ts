@@ -99,13 +99,15 @@ export default class UpdateCommand extends BaseCommand {
               let groupRank = userData.groups[groupId];
               if (!groupRank) {
                 try {
-                  groupRank = await getRankInGroup(user.roblox_id, parseInt(groupId));
+                  groupRank = await getRankInGroup(parseInt(groupId), user.roblox_id);
                   userData.groups[groupId] = groupRank;
                 } catch (error) {
                   groupRank = 0;
 
                   errors.push(error);
                 }
+
+                this.Bot.cacheUser(member, userData);
               }
 
               if (!minRank && groupRank > 0) {
@@ -113,7 +115,7 @@ export default class UpdateCommand extends BaseCommand {
                 break;
               }
 
-              if (groupRank > (minRank || 1) && groupRank < (maxRank || 255)) {
+              if (groupRank >= (minRank || 1) && groupRank <= (maxRank || 255)) {
                 canGetRole = true;
                 break;
               }
