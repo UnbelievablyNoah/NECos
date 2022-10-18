@@ -11,10 +11,8 @@ import { CommandInteraction, PermissionFlagsBits, Colors } from "discord.js";
 
 export default class BindsCommand extends BaseCommand {
   name = "binds";
-  description =
-    "Allows guild administrators to list rolebinds for this guild.";
-  usage =
-    '/binds';
+  description = "Allows guild administrators to list rolebinds for this guild.";
+  usage = "/binds";
 
   defaultPermission = [PermissionFlagsBits.Administrator];
 
@@ -30,7 +28,7 @@ export default class BindsCommand extends BaseCommand {
 
     const guild = Interaction.guild;
     const database: Knex = this.NECos.database;
-   
+
     const guildTable = database<Guild>("guilds");
     let guildData = await guildTable
       .select("*")
@@ -43,27 +41,33 @@ export default class BindsCommand extends BaseCommand {
       });
     }
 
-    const bindData: Array<BoundRole> = await JSON.parse(guildData.verification_bind_data);
+    const bindData: Array<BoundRole> = await JSON.parse(
+      guildData.verification_bind_data
+    );
     const fields = [];
-    
+
     for (const boundRole of bindData) {
       let bindString = "\n";
       for (const bindData of boundRole.binds) {
-        bindString += ` • \`${bindData.type}\`:\`${bindData.data}\`\n`
+        bindString += ` • \`${bindData.type}\`:\`${bindData.data}\`\n`;
       }
 
-      fields.push(`<@&${boundRole.role_id}> (isDefault \`${boundRole.isDefault}\`): ${bindString}`)
+      fields.push(
+        `<@&${boundRole.role_id}> (isDefault \`${boundRole.isDefault}\`): ${bindString}`
+      );
     }
 
     await Interaction.reply({
       embeds: [
         this.Bot.createEmbed({
           title: "Rolebinds",
-          description: `List of rolebinds for **${guild.name}**:\n${fields.join("\n")}`,
-          color: Colors.Green
-        })
-      ]
-    })
+          description: `List of rolebinds for **${guild.name}**:\n${fields.join(
+            "\n"
+          )}`,
+          color: Colors.Green,
+        }),
+      ],
+    });
 
     return [true, ""];
   };

@@ -27,12 +27,12 @@ export interface Guild {
 }
 
 export interface RoleBindData {
-  type: string,
-  data: string
+  type: string;
+  data: string;
 }
 
 export interface BoundRole {
-  role_id: string,
-  binds: Array<RoleBindData>,
+  role_id: string;
+  binds: Array<RoleBindData>;
   isDefault: boolean;
 }

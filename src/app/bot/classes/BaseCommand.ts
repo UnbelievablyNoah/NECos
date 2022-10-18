@@ -1,6 +1,7 @@
 import type { CommandInteraction } from "discord.js";
+import { EventEmitter } from "node:events";
 
-export abstract class BaseCommand {
+export abstract class BaseCommand extends EventEmitter {
   Bot = null;
   NECos = null;
 
@@ -12,6 +13,8 @@ export abstract class BaseCommand {
   defaultPermissions = [];
 
   constructor(Bot) {
+    super();
+
     this.Bot = Bot;
     this.NECos = Bot.NECos;
   }

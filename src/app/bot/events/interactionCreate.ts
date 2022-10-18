@@ -94,6 +94,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
     var [commandExecuted, commandReturn] = [false, ""];
 
     try {
+      command.emit("command", Interaction);
       [commandExecuted, commandReturn] = await command.onCommand(Interaction);
     } catch (error) {
       console.error(error);

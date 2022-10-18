@@ -93,7 +93,9 @@ export default class BindCommand extends BaseCommand {
     const existingRole = bindData.find((r) => r.role_id == role.id.toString());
 
     if (existingRole) {
-      const existingBind = existingRole.binds.find(bind => bind.type == roleType && bind.data == roleData);
+      const existingBind = existingRole.binds.find(
+        (bind) => bind.type == roleType && bind.data == roleData
+      );
       if (existingBind) {
         await Interaction.editReply({
           embeds: [
@@ -113,16 +115,16 @@ export default class BindCommand extends BaseCommand {
       role_id: role.id.toString(),
       binds: [],
       isDefault: (roleDefault && roleDefault.value == true) || false,
-    }
+    };
 
     boundRole.binds.push({
       type: roleType,
-      data: roleData
-    })
+      data: roleData,
+    });
 
     if (!existingRole) bindData.push(boundRole);
     guildData.verification_bind_data = JSON.stringify(bindData);
-    
+
     await guildTable.where("guild_id", guild.id.toString()).update(guildData);
 
     try {
@@ -131,10 +133,10 @@ export default class BindCommand extends BaseCommand {
           this.Bot.createEmbed({
             color: Colors.Green,
             title: "Rolebind",
-            description: `Successfully created bind with role <@&${role.id}> to type \`${roleType}\` with data \`${roleData}\`. (isDefault: \`${boundRole.isDefault}\`)`
-          })
-        ]
-      })
+            description: `Successfully created bind with role <@&${role.id}> to type \`${roleType}\` with data \`${roleData}\`. (isDefault: \`${boundRole.isDefault}\`)`,
+          }),
+        ],
+      });
     } catch (error) {}
 
     return [true, ""];

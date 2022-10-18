@@ -10,8 +10,7 @@ export default class UpdateCommand extends BaseCommand {
   name = "update";
   description =
     "Allows users to re-obtain roles, and reset their nickname based on the guild's ROBLOX bind data.";
-  usage =
-    '/update';
+  usage = "/update";
 
   cooldown = 15;
 
@@ -32,31 +31,38 @@ export default class UpdateCommand extends BaseCommand {
 
     const database: Knex = this.NECos.database;
 
-    const user = await database<User>("users").select("*").where("user_id", member.id.toString()).first();
+    const user = await database<User>("users")
+      .select("*")
+      .where("user_id", member.id.toString())
+      .first();
     if (!user) {
       await Interaction.editReply({
         embeds: [
           this.Bot.createEmbed({
             color: Colors.Red,
             title: "User Update",
-            description: "You must be verified with NECos before running /update."
-          })
-        ]
+            description:
+              "You must be verified with NECos before running /update.",
+          }),
+        ],
       });
 
       return [true, ""];
     }
 
-    const guildData = await database<Guild>("guilds").select("*").where("guild_id", guild.id.toString()).first();;
+    const guildData = await database<Guild>("guilds")
+      .select("*")
+      .where("guild_id", guild.id.toString())
+      .first();
     if (!guildData) {
       await Interaction.editReply({
         embeds: [
           this.Bot.createEmbed({
             color: Colors.Red,
             title: "User Update",
-            description: `User update failed to due guild data being empty (for guild_id ${guild.id}). Contact a guild administrator.`
-          })
-        ]
+            description: `User update failed to due guild data being empty (for guild_id ${guild.id}). Contact a guild administrator.`,
+          }),
+        ],
       });
 
       return [true, ""];
@@ -66,7 +72,7 @@ export default class UpdateCommand extends BaseCommand {
     let userData: CachedUserData = this.Bot.userCache[member.id.toString()] || {
       groups: {},
       ownedAssets: [],
-    }
+    };
 
     const errors = [];
 
@@ -99,7 +105,10 @@ export default class UpdateCommand extends BaseCommand {
               let groupRank = userData.groups[groupId];
               if (!groupRank) {
                 try {
-                  groupRank = await getRankInGroup(parseInt(groupId), user.roblox_id);
+                  groupRank = await getRankInGroup(
+                    parseInt(groupId),
+                    user.roblox_id
+                  );
                   userData.groups[groupId] = groupRank;
                 } catch (error) {
                   groupRank = 0;
@@ -115,7 +124,10 @@ export default class UpdateCommand extends BaseCommand {
                 break;
               }
 
-              if (groupRank >= (minRank || 1) && groupRank <= (maxRank || 255)) {
+              if (
+                groupRank >= (minRank || 1) &&
+                groupRank <= (maxRank || 255)
+              ) {
                 canGetRole = true;
                 break;
               }
@@ -142,7 +154,7 @@ export default class UpdateCommand extends BaseCommand {
           try {
             await member.roles.remove(role);
           } catch (error) {
-            errors.push(`Error removing role: ${error}`)
+            errors.push(`Error removing role: ${error}`);
           }
         }
       }
@@ -150,7 +162,7 @@ export default class UpdateCommand extends BaseCommand {
 
     let errorString = "";
     if (errors.length > 0) {
-      errorString = `Errors: ${errors.join(" ")}`
+      errorString = `Errors: ${errors.join(" ")}`;
     }
 
     await Interaction.editReply({
@@ -158,10 +170,10 @@ export default class UpdateCommand extends BaseCommand {
         this.Bot.createEmbed({
           color: (errors.length > 0 && Colors.Orange) || Colors.Green,
           title: "User Update",
-          description: `Update for <@${member.id}> successful. ${errorString}`
-        })
-      ]
-    })
+          description: `Update for <@${member.id}> successful. ${errorString}`,
+        }),
+      ],
+    });
 
     return [true, ""];
   };

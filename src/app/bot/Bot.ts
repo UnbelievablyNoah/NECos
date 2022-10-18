@@ -28,22 +28,32 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-import { Collection, Client, GatewayIntentBits as Intents, GuildMember } from "discord.js";
+import {
+  Collection,
+  Client,
+  GatewayIntentBits as Intents,
+  GuildMember,
+} from "discord.js";
 import { readdirSync } from "fs";
 import { CachedUserData } from "../Interfaces.js";
+import { BaseCommand } from "./classes/BaseCommand.js";
 
 export class Bot {
   NECos = null;
   console = null;
   configuration = null;
-  client = null;
-  commands = null;
+  client: Client = null;
+  commands: Collection<string, Collection<string, BaseCommand>> = null;
   userCache: Array<CachedUserData> = [];
 
   // Declare utility functions
-  generatePresence = null;
   loadCommands = null;
+  loadExtensions = null;
   createEmbed = null;
+
+  // Declare extensions
+  affiliates = null;
+  music = null;
 
   constructor(NECos) {
     this.constructBot(NECos);
@@ -118,5 +128,5 @@ export class Bot {
     setTimeout(() => {
       delete this.userCache[member.id.toString()];
     }, 60_000 * 5);
-  }
+  };
 }

@@ -1,6 +1,6 @@
 /**
- * @name music.ts
- * @description Extends the Extension class to create a music / song request handler.
+ * @name loadExtensions.ts
+ * @description Function that loads extension files in to memory
  * @author imskyyc
  * @repository https://github.com/Nuclear-Engineering-Co/NECos
  * @license AGPL3
@@ -21,20 +21,26 @@
  * @param { typeof NECos }
  */
 
-import { BaseExtension } from "../classes/BaseExtension.js";
+import { readdir } from "fs/promises";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { REST, Routes, Collection } from "discord.js";
 
-export default class Music extends BaseExtension {
-  queue = {};
-  cooldowns = {};
+import * as path from "path";
+import { fileURLToPath } from "url";
 
-  constructor(NECos) {
-    super(NECos);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default async (Bot) => {
+  const console = Bot.console;
+  const extensionsDir = await readdir(`${__dirname}/../extensions`);
+
+  for (const extensionFile of extensionsDir) {
+    const extensionName = extensionFile.replace(".ts", "").replace(".js", "");
+
+    const extension = new (
+      await import(`${__dirname}/../extensions/${extensionFile}`)
+    ).default(Bot.NECos);
+    Bot[extensionName] = extension;
   }
-
-  requestSong = async (songQuery: string) => {};
-
-  // Loader functions
-  up = async () => {};
-
-  down = async () => {};
-}
+};

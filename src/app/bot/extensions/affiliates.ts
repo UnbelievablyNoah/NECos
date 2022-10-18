@@ -1,6 +1,6 @@
 /**
- * @name music.ts
- * @description Extends the Extension class to create a music / song request handler.
+ * @name affiliates.ts
+ * @description Extends the Extension class to create an affiliates management handler.
  * @author imskyyc
  * @repository https://github.com/Nuclear-Engineering-Co/NECos
  * @license AGPL3
@@ -22,19 +22,31 @@
  */
 
 import { BaseExtension } from "../classes/BaseExtension.js";
+import { CommandInteraction } from "discord.js";
 
-export default class Music extends BaseExtension {
+export default class Affiliates extends BaseExtension {
   queue = {};
   cooldowns = {};
 
   constructor(NECos) {
     super(NECos);
+
+    this.up()
   }
 
-  requestSong = async (songQuery: string) => {};
+  onUpdateInteraction = async (Interaction: CommandInteraction) => {
+    if (!Interaction.inCachedGuild()) return;
+
+    console.log(Interaction.member.id);
+  };
 
   // Loader functions
-  up = async () => {};
+  up = async () => {
+    this.Bot.commands
+      .get("verification")
+      .get("update")
+      .on("command", this.onUpdateInteraction);
+  };
 
   down = async () => {};
 }

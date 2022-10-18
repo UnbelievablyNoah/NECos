@@ -1,6 +1,6 @@
 /**
  * @name loadCommands.ts
- * @description Function that generates presence data
+ * @description Function that loads commands for the bot to use, optionally posting them to the Discord API.
  * @author imskyyc
  * @repository https://github.com/Nuclear-Engineering-Co/NECos
  * @license AGPL3
@@ -19,6 +19,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
  * @param { typeof NECos }
+ * @param pushToRest: boolean
  */
 
 import { readdir } from "fs/promises";
@@ -66,6 +67,10 @@ export default async (Bot, pushToRest: boolean) => {
       const SlashCommand = new SlashCommandBuilder();
       SlashCommand.setName(command.name);
       SlashCommand.setDescription(command.description);
+      
+      for (const defaultPermission of command.defaultPermissions || []) {
+        SlashCommand.setDefaultMemberPermissions(defaultPermission);
+      }
 
       for (const option of command.options || []) {
         SlashCommand.options.push(option);
@@ -84,12 +89,12 @@ export default async (Bot, pushToRest: boolean) => {
       const API = new REST({ version: "10" }).setToken(
         Bot.configuration.user.token
       );
-  
+
       console.debug("Pushing SlashCommands to Discord REST.");
       await API.put(Routes.applicationCommands(Bot.client.user.id), {
         body: commandJSON,
       });
-  
+
       console.success("Successfully pushed SlashCommands to Discord REST API");
     } catch (error) {
       console.error(`Failed to push SlashCommands to Discord API! ${error}`);
