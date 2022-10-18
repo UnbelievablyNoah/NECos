@@ -99,17 +99,6 @@ const NECos = class NECos {
   exit = async (signal) => {
     this.console.debug(`EXITING WITH CODE ${signal}`);
 
-    if (this.bot) {
-      try {
-        await this.bot.client.user.setPresence({
-          status: "offline",
-          activities: [],
-        });
-      } catch (error) {
-        this.console.log(error);
-      }
-    }
-
     try {
       this.database.destroy();
     } catch (error) {}
