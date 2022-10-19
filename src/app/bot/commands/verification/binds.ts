@@ -1,12 +1,6 @@
 import { Knex } from "knex";
 import { BaseCommand } from "../../classes/BaseCommand.js";
 import { Guild, BoundRole } from "../../../Interfaces.js";
-
-import {
-  SlashCommandStringOption,
-  SlashCommandBooleanOption,
-  SlashCommandRoleOption,
-} from "@discordjs/builders";
 import { CommandInteraction, PermissionFlagsBits, Colors } from "discord.js";
 
 export default class BindsCommand extends BaseCommand {
@@ -57,7 +51,7 @@ export default class BindsCommand extends BaseCommand {
       );
     }
 
-    await Interaction.reply({
+    await Interaction.editReply({
       embeds: [
         this.Bot.createEmbed({
           title: "Rolebinds",

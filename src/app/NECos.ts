@@ -19,20 +19,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { readFileSync } from "fs";
 import { Configuration } from "./modules/Configuration.js";
 import { Console } from "./modules/Console.js";
 import { Bot } from "./bot/Bot.js";
 
 import Knex from "knex";
 import * as dbConfig from "../../config/dbconfig.js";
-
-import * as path from "path";
-import { fileURLToPath } from "url";
 import { exec } from "child_process";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Instantiate NECos object
 const NECos = class NECos {
@@ -63,8 +56,8 @@ const NECos = class NECos {
 
     // try git rev-parse HEAD
     try {
-      await new Promise<void>((resolve, reject) => {
-        exec("git rev-parse HEAD", (error, stdout, stderr) => {
+      await new Promise<void>((resolve) => {
+        exec("git rev-parse HEAD", (error, stdout) => {
           this.version = stdout.toString().substring(0, 7);
 
           resolve();

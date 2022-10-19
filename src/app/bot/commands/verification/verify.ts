@@ -84,7 +84,7 @@ export default class VerifyCommand extends BaseCommand {
             ]
           );
 
-          await Interaction.reply({
+          await Interaction.editReply({
             components: [actionRow],
 
             embeds: [
@@ -160,11 +160,7 @@ export default class VerifyCommand extends BaseCommand {
             ],
           };
 
-          if (Interaction.replied) {
-            await Interaction.editReply(replyData);
-          } else {
-            await Interaction.reply(replyData);
-          }
+          await Interaction.editReply(replyData);
         });
       } catch (error) {
         userdataConfirmed = true;

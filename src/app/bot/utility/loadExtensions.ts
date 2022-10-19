@@ -22,8 +22,6 @@
  */
 
 import { readdir } from "fs/promises";
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { REST, Routes, Collection } from "discord.js";
 
 import * as path from "path";
 import { fileURLToPath } from "url";
@@ -32,7 +30,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default async (Bot) => {
-  const console = Bot.console;
   const extensionsDir = await readdir(`${__dirname}/../extensions`);
 
   for (const extensionFile of extensionsDir) {

@@ -25,10 +25,10 @@
 import { EmbedBuilder } from "@discordjs/builders";
 
 export default (Bot, embedData) => {
-  var embedData = embedData || {};
+  const data = embedData || {};
 
-  const embed = new EmbedBuilder(embedData);
-  if (!embedData.author) {
+  const embed = new EmbedBuilder(data);
+  if (!data.author) {
     embed.setAuthor({
       name: "NECos",
       url: Bot.NECos.configuration.app.github_url,

@@ -37,7 +37,7 @@ export default class Affiliates extends BaseExtension {
   onUpdateInteraction = async (Interaction: CommandInteraction) => {
     if (!Interaction.inCachedGuild()) return;
 
-    console.log(Interaction.member.id);
+    
   };
 
   // Loader functions

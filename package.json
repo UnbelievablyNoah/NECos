@@ -1,6 +1,7 @@
 {
   "name": "necos",
   "module": "NECos.ts",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "build": "./necos build",

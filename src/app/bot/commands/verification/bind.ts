@@ -65,8 +65,6 @@ export default class BindCommand extends BaseCommand {
     if (!Interaction.inCachedGuild() || !Interaction.isChatInputCommand())
       return;
 
-    await Interaction.deferReply();
-
     const guild = Interaction.guild;
     const options = Interaction.options;
 

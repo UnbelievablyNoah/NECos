@@ -36,10 +36,9 @@ export class Configuration {
   constructor(fileName: string) {
     this.fileName = fileName;
 
-    var configString;
     try {
       // Attempt to read the configuration file from the specified path
-      configString = readFileSync(`${__dirname}/../../../${this.fileName}`);
+      const configString = readFileSync(`${__dirname}/../../../${this.fileName}`).toString();
 
       // Parse the toml or json data
       const fileExtension = fileName.split(".").pop();

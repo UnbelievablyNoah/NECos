@@ -34,8 +34,6 @@ export default class WhoisCommand extends BaseCommand {
     if (!Interaction.inCachedGuild() || !Interaction.isChatInputCommand())
       return;
 
-    await Interaction.deferReply();
-
     const guild = Interaction.guild;
     const options = Interaction.options;
 
@@ -96,7 +94,7 @@ export default class WhoisCommand extends BaseCommand {
             description: "No user was found for the entered query."
           })
         ]
-      })
+     })
 
       return [true, ""]
     }

@@ -1,15 +1,23 @@
-import { CommandInteraction, Colors } from "discord.js";
+import { CommandInteraction, Colors, PermissionFlagsBits, SlashCommandUserOption } from "discord.js";
 import { Knex } from "knex";
 import { BaseCommand } from "../../classes/BaseCommand.js";
-import { User, Guild } from "../../../Interfaces.js";
+import { User, Guild, CachedUserData } from "../../../Interfaces.js";
 
 export default class UpdateCommand extends BaseCommand {
-  name = "update";
+  name = "reverify";
   description =
-    "Allows users to re-obtain roles, and reset their nickname based on the guild's ROBLOX bind data.";
-  usage = "/update";
+    "Allows guild moderators to force-update a user.";
+  usage = "/reverify @user";
 
   cooldown = 15;
+  defaultPermissions = [PermissionFlagsBits.ModerateMembers];
+
+  options = [
+    new SlashCommandUserOption()
+      .setName("user")
+      .setDescription("The user to update")
+      .setRequired(true)
+  ];
 
   constructor(Bot) {
     super(Bot);
@@ -22,7 +30,24 @@ export default class UpdateCommand extends BaseCommand {
       return;
 
     const guild = Interaction.guild;
-    const member = Interaction.member;
+    const options = Interaction.options;
+    const apiUser = options.getUser("user");
+
+    const member = await guild.members.resolve(apiUser.id);
+    if (!member) {
+      await Interaction.editReply({
+        embeds: [
+          this.Bot.createEmbed({
+            color: Colors.Red,
+            title: "User Update",
+            description:
+              `Could not find user <@${member.id}> (${member.id}).`,
+          }),
+        ],
+      });
+
+      return [true, ""];
+    }
 
     const database: Knex = this.NECos.database;
 
@@ -37,7 +62,7 @@ export default class UpdateCommand extends BaseCommand {
             color: Colors.Red,
             title: "User Update",
             description:
-              "You must be verified with NECos before running /update.",
+              `<@${member.id}> is not verified with NECos.`,
           }),
         ],
       });

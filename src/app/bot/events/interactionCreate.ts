@@ -38,6 +38,9 @@ export default async (Bot, Interaction: BaseInteraction) => {
   const member = Interaction.member;
 
   if (Interaction.isCommand() && Bot.commands) {
+    // Defer interaction
+    await Interaction.deferReply();
+
     // Handle command interactons
     const commands: Collection<string, Collection<string, any>> = Bot.commands;
     let command = null;
@@ -64,7 +67,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
 
       if (cooldownTime !== null && cooldownTime > 0) {
         const timeLeft = (cooldownTime - now) / 1000;
-        return Interaction.reply({
+        return Interaction.editReply({
           embeds: [
             Bot.createEmbed({
               title: "Command Cooldown",
@@ -73,14 +76,21 @@ export default async (Bot, Interaction: BaseInteraction) => {
               )} more second(s) before executing ${command.name}.`,
               color: Colors.Red,
             }),
-          ],
-
-          ephemeral: true,
+          ]
         });
       } else {
         commandCooldownData.set(member.id, now + cooldownAmount);
         setTimeout(() => commandCooldownData.delete(member.id), cooldownAmount);
       }
+    }
+
+    // check defaultPermissions
+    let canExecute = false;
+
+    // TODO
+
+    if (!canExecute) {
+
     }
 
     if (!commandTrackers.has(command.name)) {
@@ -108,23 +118,13 @@ export default async (Bot, Interaction: BaseInteraction) => {
         color: Colors.Red,
       });
 
-      if (Interaction.replied) {
-        return Interaction.editReply({
-          content: "",
-          files: [],
+      return Interaction.editReply({
+        content: "",
+        files: [],
 
-          embeds: [embed],
-        });
-      } else {
-        return Interaction.reply({
-          content: "",
-          files: [],
-
-          embeds: [embed],
-
-          ephemeral: true,
-        });
-      }
+        embeds: [embed],
+        components: []
+      });
     }
 
     try {
@@ -143,23 +143,13 @@ export default async (Bot, Interaction: BaseInteraction) => {
         color: Colors.Red,
       });
 
-      if (Interaction.replied) {
-        return Interaction.editReply({
-          content: "",
-          files: [],
+      return Interaction.editReply({
+        content: "",
+        files: [],
 
-          embeds: [embed],
-        });
-      } else {
-        return Interaction.reply({
-          content: "",
-          files: [],
-
-          embeds: [embed],
-
-          ephemeral: true,
-        });
-      }
+        embeds: [embed],
+        components: []
+      });
     }
   }
 };

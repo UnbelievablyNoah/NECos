@@ -50,6 +50,7 @@ export class Bot {
   loadCommands = null;
   loadExtensions = null;
   createEmbed = null;
+  updateUser = null;
 
   // Declare extensions
   affiliates = null;
@@ -117,6 +118,7 @@ export class Bot {
     // Log in
     if (process.env.NODE_ENV == "ci") {
       this.loadCommands(false); // Test commands
+      this.loadExtensions(); // Test extensions
     } else {
       this.client.login(this.configuration.user.token);
     }

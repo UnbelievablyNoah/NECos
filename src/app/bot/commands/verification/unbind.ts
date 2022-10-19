@@ -59,16 +59,14 @@ export default class UnbindCommand extends BaseCommand {
     if (!Interaction.inCachedGuild() || !Interaction.isChatInputCommand())
       return;
 
-    await Interaction.deferReply();
-
     const guild = Interaction.guild;
     const options = Interaction.options;
 
     const database: Knex = this.NECos.database;
 
     const role = options.getRole("role");
-    let roleTypeOption = options.get("type");
-    let roleDataOption = options.get("data");
+    const roleTypeOption = options.get("type");
+    const roleDataOption = options.get("data");
 
     const guildTable = database<Guild>("guilds");
     let guildData = await guildTable
