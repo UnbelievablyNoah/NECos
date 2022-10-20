@@ -14,7 +14,7 @@ module.exports = {
                 port: "5622"
               }
             ],
-            key: "../deploy.key",
+            key: "deploy.key",
             ref: "origin/master",
             repo: "https://github.com/Nuclear-Engineering-Co/NECos",
             path: "/srv/NECos",
