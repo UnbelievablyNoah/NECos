@@ -47,15 +47,15 @@ jobs:
       - run: npm run build
       - run: npm run ci --if-present
       - name: "Set up SSH"
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_PRIVATE_KEY" > ./deploy.key
           sudo chmod 600 ./deploy.key
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          shell: bash
-          env:
-            SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-            SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
       - name: "Deploy"
         run: env $(cat .env | grep -v \"#\" | xargs) pm2 deploy ecosystem.config.js production
 
