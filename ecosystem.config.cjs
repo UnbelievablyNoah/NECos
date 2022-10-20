@@ -8,7 +8,10 @@ module.exports = {
     deploy: {
         production: {
             user: "deploy",
-            host: "ssh.imskyyc.xyz",
+            host: {
+              "host": "ssh.imskyyc.xyz",
+              "port": 5622
+            },
             key: "deploy.key",
             ref: "origin/master",
             repo: "https://github.com/Nuclear-Engineering-Co/NECos",
