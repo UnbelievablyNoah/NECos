@@ -57,5 +57,6 @@ jobs:
           sudo chmod 600 ./deploy.key
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
       - name: "Deploy"
-        run: npx pm2 deploy ecosystem.config.cjs production
+        run: npx pm2 deploy ecosystem.config.cjs production setup
+        run: npx pm2 deploy ecosystem.config.cjs production post-deploy
 
