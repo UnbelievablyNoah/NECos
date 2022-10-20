@@ -1,11 +1,19 @@
-import { CommandInteraction, Colors, ActionRowBuilder, SelectMenuBuilder, SelectMenuOptionBuilder, Collection, ComponentType } from "discord.js";
+import {
+  CommandInteraction,
+  Colors,
+  ActionRowBuilder,
+  SelectMenuBuilder,
+  SelectMenuOptionBuilder,
+  Collection,
+  ComponentType,
+} from "discord.js";
 import { BaseCommand } from "../../classes/BaseCommand.js";
 
 const firstToUpper = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
 
-export default class UpdateCommand extends BaseCommand {
+export default class HelpCommand extends BaseCommand {
   name = "help";
   description =
     "Allows users to view a list of commands & general bot information.";
@@ -22,19 +30,21 @@ export default class UpdateCommand extends BaseCommand {
       return;
 
     const member = Interaction.member;
-    const commands: Collection<string, Collection<string, BaseCommand>> = this.Bot.commands;
+    const commands: Collection<string, Collection<string, BaseCommand>> = this
+      .Bot.commands;
     const options = [
       new SelectMenuOptionBuilder()
         .setLabel("Information")
         .setValue("information")
-        .setDescription("The main information page.")
+        .setDescription("The main information page."),
     ];
 
     for (const key of Array.from(commands.keys())) {
-      options.push(new SelectMenuOptionBuilder()
-        .setLabel(firstToUpper(key))
-        .setValue(key)
-        .setDescription(`All commands in the ${firstToUpper(key)} category.`)
+      options.push(
+        new SelectMenuOptionBuilder()
+          .setLabel(firstToUpper(key))
+          .setValue(key)
+          .setDescription(`All commands in the ${firstToUpper(key)} category.`)
       );
 
       /*
@@ -53,43 +63,43 @@ export default class UpdateCommand extends BaseCommand {
         {
           name: "NECos Version (commitId)",
           value: `${this.NECos.version}`,
-          inline: true
+          inline: true,
         },
 
         {
           name: "NECos GitHub",
           value: "https://github.com/Nuclear-Engineering-Co/NECos",
-          inline: true
-        }
-      ]
+          inline: true,
+        },
+      ],
     });
-
-    const selectMenu = new SelectMenuBuilder()
-      .setCustomId("categorySelect")
-      .setPlaceholder("Information")
-      .addOptions(...[options]);
-
-    const actionRow = new ActionRowBuilder<SelectMenuBuilder>()
-      .addComponents(selectMenu);
 
     await Interaction.editReply({
       embeds: [defaultEmbed],
-      components: [actionRow],
+      components: [
+        new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+          new SelectMenuBuilder()
+            .setCustomId("categorySelect")
+            .setPlaceholder("Information")
+            .addOptions(...[options])
+        ),
+      ],
     });
 
     const interactionReply = await Interaction.fetchReply();
 
-    const interactionCollector = interactionReply.createMessageComponentCollector({
-      filter: (interaction) => interaction.member.id === member.id,
-      idle: 120_000,
-      componentType: ComponentType.SelectMenu
-    });
+    const interactionCollector =
+      interactionReply.createMessageComponentCollector({
+        filter: (interaction) => interaction.member.id === member.id,
+        idle: 120_000,
+        componentType: ComponentType.SelectMenu,
+      });
 
     let activePanel = "information";
-    interactionCollector.on('collect', async collected => {
+    interactionCollector.on("collect", async (collected) => {
       try {
         await collected.deferUpdate();
-      } catch(error) {}
+      } catch (error) {}
 
       const panelName = collected.values[0];
       if (panelName == activePanel) return;
@@ -97,11 +107,11 @@ export default class UpdateCommand extends BaseCommand {
 
       if (panelName == "information") {
         await Interaction.editReply({
-          embeds: [defaultEmbed]
-        })
+          embeds: [defaultEmbed],
+        });
       } else {
         const commandCategory = commands.get(panelName);
-        const fields = []
+        const fields = [];
 
         for (const commandName of Array.from(commandCategory.keys())) {
           const command = commandCategory.get(commandName);
@@ -109,27 +119,27 @@ export default class UpdateCommand extends BaseCommand {
           fields.push({
             name: firstToUpper(commandName),
             value: `• Description: ${command.description}\n• Usage: ${command.usage}`,
-          })
+          });
         }
 
         const commandPanelEmbed = this.Bot.createEmbed({
           color: Colors.Green,
           title: `${firstToUpper(panelName)} Commands`,
-          fields: fields
-        })
+          fields: fields,
+        });
 
         await Interaction.editReply({
-          embeds: [commandPanelEmbed]
-        })
+          embeds: [commandPanelEmbed],
+        });
       }
-    })
+    });
 
-    interactionCollector.on('end', async () => {
+    interactionCollector.on("end", async () => {
       try {
         await interactionReply.delete();
-      } catch (error) {};
-    })
+      } catch (error) {}
+    });
 
-    return [true, ""]
+    return [true, ""];
   };
 }

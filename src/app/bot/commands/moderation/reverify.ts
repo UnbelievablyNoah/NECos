@@ -1,12 +1,16 @@
-import { CommandInteraction, Colors, PermissionFlagsBits, SlashCommandUserOption } from "discord.js";
+import {
+  CommandInteraction,
+  Colors,
+  PermissionFlagsBits,
+  SlashCommandUserOption,
+} from "discord.js";
 import { Knex } from "knex";
 import { BaseCommand } from "../../classes/BaseCommand.js";
 import { User, Guild, CachedUserData } from "../../../Interfaces.js";
 
 export default class UpdateCommand extends BaseCommand {
   name = "reverify";
-  description =
-    "Allows guild moderators to force-update a user.";
+  description = "Allows guild moderators to force-update a user.";
   usage = "/reverify @user";
 
   cooldown = 15;
@@ -16,7 +20,7 @@ export default class UpdateCommand extends BaseCommand {
     new SlashCommandUserOption()
       .setName("user")
       .setDescription("The user to update")
-      .setRequired(true)
+      .setRequired(true),
   ];
 
   constructor(Bot) {
@@ -40,8 +44,7 @@ export default class UpdateCommand extends BaseCommand {
           this.Bot.createEmbed({
             color: Colors.Red,
             title: "User Update",
-            description:
-              `Could not find user <@${member.id}> (${member.id}).`,
+            description: `Could not find user <@${member.id}> (${member.id}).`,
           }),
         ],
       });
@@ -61,8 +64,7 @@ export default class UpdateCommand extends BaseCommand {
           this.Bot.createEmbed({
             color: Colors.Red,
             title: "User Update",
-            description:
-              `<@${member.id}> is not verified with NECos.`,
+            description: `<@${member.id}> is not verified with NECos.`,
           }),
         ],
       });

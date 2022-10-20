@@ -34,7 +34,7 @@ export default async (
   guild: Guild,
   guildData: GuildData,
   user: User
-) => {
+): Promise<Array<string>> => {
   const bindData = JSON.parse(guildData.verification_bind_data);
   const userData: CachedUserData = Bot.userCache[member.id.toString()] || {
     groups: {},

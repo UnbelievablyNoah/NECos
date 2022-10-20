@@ -32,7 +32,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default async (Bot, pushToRest: boolean) => {
+export default async (Bot, pushToRest: boolean): Promise<void> => {
   const console = Bot.console;
   const commandsDir = await readdir(`${__dirname}/../commands`);
   const commands = new Collection();
@@ -67,7 +67,7 @@ export default async (Bot, pushToRest: boolean) => {
       const SlashCommand = new SlashCommandBuilder();
       SlashCommand.setName(command.name);
       SlashCommand.setDescription(command.description);
-      
+
       for (const defaultPermission of command.defaultPermissions || []) {
         SlashCommand.setDefaultMemberPermissions(defaultPermission);
       }

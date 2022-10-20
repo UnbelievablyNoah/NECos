@@ -1,4 +1,11 @@
-import { CommandInteraction, Colors, SlashCommandUserOption, SlashCommandStringOption, PermissionFlagsBits, Role } from "discord.js";
+import {
+  CommandInteraction,
+  Colors,
+  SlashCommandUserOption,
+  SlashCommandStringOption,
+  PermissionFlagsBits,
+  Role,
+} from "discord.js";
 import { Knex } from "knex";
 import { BaseCommand } from "../../classes/BaseCommand.js";
 import { User, Guild, CachedUserData } from "../../../Interfaces.js";
@@ -11,7 +18,7 @@ export default class WhoisCommand extends BaseCommand {
   description =
     "Allows users to re-obtain roles, and reset their nickname based on the guild's ROBLOX bind data.";
   usage = "/whois @user OR roblox id OR discord id";
-  defaultPermissions = [PermissionFlagsBits.ModerateMembers]
+  defaultPermissions = [PermissionFlagsBits.ModerateMembers];
 
   options = [
     new SlashCommandUserOption()
@@ -21,8 +28,8 @@ export default class WhoisCommand extends BaseCommand {
     new SlashCommandStringOption()
       .setName("string")
       .setDescription("The roblox id or discord id to search for")
-      .setRequired(false)
-  ]
+      .setRequired(false),
+  ];
 
   constructor(Bot) {
     super(Bot);
@@ -38,7 +45,7 @@ export default class WhoisCommand extends BaseCommand {
     const options = Interaction.options;
 
     const userOption = options.getUser("user", false);
-    const stringOption = options.getString("string", false); 
+    const stringOption = options.getString("string", false);
 
     if (!userOption && !stringOption) {
       await Interaction.editReply({
@@ -46,12 +53,12 @@ export default class WhoisCommand extends BaseCommand {
           this.Bot.createEmbed({
             title: "Whois",
             description: `You must provide a user or string argument to search for a user.`,
-            color: Colors.Red
-          })
-        ]
-      })
+            color: Colors.Red,
+          }),
+        ],
+      });
 
-      return [true, ""]
+      return [true, ""];
     }
 
     const database: Knex = this.NECos.database;
@@ -76,12 +83,12 @@ export default class WhoisCommand extends BaseCommand {
           this.Bot.createEmbed({
             color: Colors.Red,
             title: "Whois",
-            description: "No user was found for the entered query."
-          })
-        ]
-      })
+            description: "No user was found for the entered query.",
+          }),
+        ],
+      });
 
-      return [true, ""]
+      return [true, ""];
     }
 
     const guildMember = await guild.members.resolve(user.user_id);
@@ -91,30 +98,30 @@ export default class WhoisCommand extends BaseCommand {
           this.Bot.createEmbed({
             color: Colors.Red,
             title: "Whois",
-            description: "No user was found for the entered query."
-          })
-        ]
-     })
+            description: "No user was found for the entered query.",
+          }),
+        ],
+      });
 
-      return [true, ""]
+      return [true, ""];
     }
 
     let playerInfo: PlayerInfo = null;
 
     try {
-      playerInfo = await getPlayerInfo(user.roblox_id)
+      playerInfo = await getPlayerInfo(user.roblox_id);
     } catch (error) {
       await Interaction.editReply({
         embeds: [
           this.Bot.createEmbed({
             color: Colors.Red,
             title: "Whois",
-            description: `Failed to get player info from Roblox API. Error: ${error}.`
-          })
-        ]
-      })
+            description: `Failed to get player info from Roblox API. Error: ${error}.`,
+          }),
+        ],
+      });
 
-      return [true, ""]
+      return [true, ""];
     }
 
     const roles = guildMember.roles.cache;
@@ -124,7 +131,7 @@ export default class WhoisCommand extends BaseCommand {
     for (const key of roleKeys) {
       const role: Role = roles.get(key);
 
-      roleArray.push(`<@&${role.id}>`)
+      roleArray.push(`<@&${role.id}>`);
     }
 
     await Interaction.editReply({
@@ -134,13 +141,13 @@ export default class WhoisCommand extends BaseCommand {
           title: "Whois",
           description: `User info for ${playerInfo.displayName} (@${playerInfo.username}):`,
           thumbnail: {
-            url: guildMember.user.avatarURL()
+            url: guildMember.user.avatarURL(),
           },
           fields: [
             {
               name: "Discord User",
               value: `<@${user.user_id}> (${user.user_id})`,
-              inline: true
+              inline: true,
             },
             {
               name: "Joined Server",
@@ -150,7 +157,7 @@ export default class WhoisCommand extends BaseCommand {
             {
               name: "Verified At",
               value: `${user.created_at}`,
-              inline: true
+              inline: true,
             },
             {
               name: "Roblox Id",
@@ -160,23 +167,23 @@ export default class WhoisCommand extends BaseCommand {
             {
               name: "Roblox Username",
               value: `${playerInfo.username}`,
-              inline: true
+              inline: true,
             },
             {
               name: "Roblox Display Name",
               value: `${playerInfo.displayName}`,
-              inline: true
+              inline: true,
             },
             {
               name: "Roblox Join Date",
               value: `${playerInfo.joinDate}`,
-              inline: true
+              inline: true,
             },
             {
               name: "Roles",
-              value: roleArray.join(",")
-            }
-          ]
+              value: roleArray.join(","),
+            },
+          ],
         }),
       ],
     });

@@ -24,7 +24,7 @@
 
 import { EmbedBuilder } from "@discordjs/builders";
 
-export default (Bot, embedData) => {
+export default (Bot, embedData): EmbedBuilder => {
   const data = embedData || {};
 
   const embed = new EmbedBuilder(data);

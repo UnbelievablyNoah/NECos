@@ -1,3 +1,5 @@
+import { PermissionFlagsBits } from "discord.js";
+
 export interface User {
   id: number;
   user_id: string;
@@ -24,6 +26,15 @@ export interface Guild {
   command_permissions: string;
   verification_bind_data: string;
   mod_actions: string;
+}
+
+export interface GuildConfiguration {
+  channels: {
+    auditLogs: string;
+    commandLogs: string;
+  };
+
+  commandPermissions: { [commandName: string]: Array<PermissionFlagsBits> };
 }
 
 export interface RoleBindData {

@@ -3,7 +3,6 @@
 # bozo batallion
 config/
 build/
-ecosystem.config.js
 
 # Logs
 

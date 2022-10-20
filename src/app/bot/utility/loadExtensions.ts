@@ -29,7 +29,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default async (Bot) => {
+export default async (Bot): Promise<void> => {
   const extensionsDir = await readdir(`${__dirname}/../extensions`);
 
   for (const extensionFile of extensionsDir) {

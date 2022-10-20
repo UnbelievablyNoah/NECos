@@ -33,10 +33,12 @@ import {
   Client,
   GatewayIntentBits as Intents,
   GuildMember,
+  Colors,
 } from "discord.js";
 import { readdirSync } from "fs";
-import { CachedUserData } from "../Interfaces.js";
+import { CachedUserData, Guild } from "../Interfaces.js";
 import { BaseCommand } from "./classes/BaseCommand.js";
+import { Knex } from "knex";
 
 export class Bot {
   NECos = null;
@@ -53,6 +55,7 @@ export class Bot {
   updateUser = null;
 
   // Declare extensions
+  auditLogs = null;
   affiliates = null;
   music = null;
 
@@ -124,11 +127,33 @@ export class Bot {
     }
   };
 
-  cacheUser = async (member: GuildMember, userData: CachedUserData) => {
+  cacheUser = (member: GuildMember, userData: CachedUserData) => {
     this.userCache[member.id.toString()] = userData;
 
     setTimeout(() => {
       delete this.userCache[member.id.toString()];
     }, 60_000 * 5);
+  };
+
+  deleteUserData = async (member: GuildMember): Promise<void> => {
+    const guilds = this.client.guilds.cache;
+    const database: Knex = this.NECos.database;
+
+    for (const guildId of Array.from(guilds.keys())) {
+      const guild = guilds.get(guildId);
+
+      try {
+        this.auditLogs.push(guild, {
+          color: Colors.DarkRed,
+          title: "Userdata Deletion",
+          description: `A user matching id ${member.id} has processed a full deletion of their userdata, and has been stripped of all roles in this server.`,
+        });
+      } catch (error) {
+        console.error(error);
+        console.error(
+          "Failed to push audit log. Please investigate the above error."
+        );
+      }
+    }
   };
 }

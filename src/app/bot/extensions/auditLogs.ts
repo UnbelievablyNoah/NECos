@@ -1,6 +1,6 @@
 /**
- * @name affiliates.ts
- * @description Extends the Extension class to create an affiliates management handler.
+ * @name auditLogs.ts
+ * @description Extends the BaseExtension class to create an audit log manager.
  * @author imskyyc
  * @repository https://github.com/Nuclear-Engineering-Co/NECos
  * @license AGPL3
@@ -22,29 +22,40 @@
  */
 
 import { BaseExtension } from "../classes/BaseExtension.js";
-import { CommandInteraction } from "discord.js";
+import { Guild as DiscordGuild, APIEmbed } from "discord.js";
+import { Guild } from "../../Interfaces.js";
+import { Knex } from "knex";
 
-export default class Affiliates extends BaseExtension {
+export default class AuditLogs extends BaseExtension {
   queue = {};
   cooldowns = {};
 
   constructor(NECos) {
     super(NECos);
-
-    this.up();
   }
 
-  onUpdateInteraction = async (Interaction: CommandInteraction) => {
-    if (!Interaction.inCachedGuild()) return;
+  push = async (guild: DiscordGuild, embedData: APIEmbed): Promise<void> => {
+/*    const auditEmbed = this.Bot.createEmbed(embedData);
+    const database: Knex = this.NECos.database;
+
+    const guildConfig = database<Guild>("guilds")
+      .select("configuration")
+      .where("guild_id", guild.id)
+      .first().configuration;
+
+    const auditLogChannelId = JSON.parse(guildConfig).channels.auditLogs;
+    if (!auditLogChannelId) return;
+
+    const auditLogChannel = await guild.channels.resolve(auditLogChannelId);
+    if (!auditLogChannel) return;
+
+    await auditLogChannel.send({
+      embeds: [auditEmbed],
+    });*/
   };
 
   // Loader functions
-  up = async () => {
-    this.Bot.commands
-      .get("verification")
-      .get("update")
-      .on("command", this.onUpdateInteraction);
-  };
+  up = async () => {};
 
   down = async () => {};
 }

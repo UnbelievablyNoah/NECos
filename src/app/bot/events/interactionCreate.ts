@@ -76,7 +76,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
               )} more second(s) before executing ${command.name}.`,
               color: Colors.Red,
             }),
-          ]
+          ],
         });
       } else {
         commandCooldownData.set(member.id, now + cooldownAmount);
@@ -90,7 +90,6 @@ export default async (Bot, Interaction: BaseInteraction) => {
     // TODO
 
     if (!canExecute) {
-
     }
 
     if (!commandTrackers.has(command.name)) {
@@ -123,7 +122,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
         files: [],
 
         embeds: [embed],
-        components: []
+        components: [],
       });
     }
 
@@ -148,7 +147,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
         files: [],
 
         embeds: [embed],
-        components: []
+        components: [],
       });
     }
   }
