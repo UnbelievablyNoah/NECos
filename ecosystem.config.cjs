@@ -11,7 +11,7 @@ module.exports = {
             host: [
               {
                 host: "ssh.imskyyc.xyz",
-                port: 5622
+                port: "5622"
               }
             ],
             key: "deploy.key",
