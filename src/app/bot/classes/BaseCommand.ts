@@ -12,6 +12,8 @@ export abstract class BaseCommand extends EventEmitter {
   options = [];
   defaultPermissions = [];
 
+  cooldown = null;
+
   constructor(Bot) {
     super();
 

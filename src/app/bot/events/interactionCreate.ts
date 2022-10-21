@@ -23,7 +23,7 @@
  */
 
 import { Collection, BaseInteraction, Colors } from "discord.js";
-import { BaseCommand } from "../../../../build/src/app/bot/classes/BaseCommand";
+import { BaseCommand } from "../classes/BaseCommand.js";
 
 const cooldownData: Collection<
   string,
@@ -44,7 +44,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
 
     // Handle command interactons
     const commands: Collection<string, Collection<string, BaseCommand>> = Bot.commands;
-    let command = null;
+    let command: BaseCommand = null;
 
     for (const key of Array.from(commands.keys())) {
       const category = commands.get(key);
