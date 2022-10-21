@@ -23,6 +23,7 @@
  */
 
 import { Collection, BaseInteraction, Colors } from "discord.js";
+import { BaseCommand } from "../../../../build/src/app/bot/classes/BaseCommand";
 
 const cooldownData: Collection<
   string,
@@ -42,7 +43,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
     await Interaction.deferReply();
 
     // Handle command interactons
-    const commands: Collection<string, Collection<string, any>> = Bot.commands;
+    const commands: Collection<string, Collection<string, BaseCommand>> = Bot.commands;
     let command = null;
 
     for (const key of Array.from(commands.keys())) {
@@ -85,7 +86,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
     }
 
     // check permissions
-    let canExecute = false;
+    let canExecute = command.defaultPermissions.length == 0;
 
     for (const permissionFlagBit of command.defaultPermissions) {
       if (member.permissions.has(permissionFlagBit)) {

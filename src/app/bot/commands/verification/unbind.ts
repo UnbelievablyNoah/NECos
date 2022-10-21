@@ -15,7 +15,7 @@ export default class UnbindCommand extends BaseCommand {
   usage =
     '/unbind type:("user" OR "group" data:("userId: number" OR "groupId:minRank:maxRank?")';
 
-  defaultPermission = [PermissionFlagsBits.Administrator];
+    defaultPermissions = [PermissionFlagsBits.Administrator];
 
   constructor(Bot) {
     super(Bot);
