@@ -8,7 +8,7 @@ export default class BindsCommand extends BaseCommand {
   description = "Allows guild administrators to list rolebinds for this guild.";
   usage = "/binds";
 
-  defaultPermissions = [PermissionFlagsBits.Administrator];
+  defaultPermission = PermissionFlagsBits.Administrator;
 
   constructor(Bot) {
     super(Bot);

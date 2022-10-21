@@ -16,7 +16,7 @@ export default class BindCommand extends BaseCommand {
   usage =
     '/bind type:("user" OR "group" data:("userId: number" OR "groupId:minRank:maxRank?") default: boolean(true/false)';
 
-  defaultPermissions = [PermissionFlagsBits.Administrator];
+  defaultPermission = PermissionFlagsBits.Administrator;
 
   constructor(Bot) {
     super(Bot);
