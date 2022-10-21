@@ -1,4 +1,4 @@
-import type { CommandInteraction } from "discord.js";
+import type { CommandInteraction, PermissionFlagsBits } from "discord.js";
 import { EventEmitter } from "node:events";
 
 export abstract class BaseCommand extends EventEmitter {
@@ -10,7 +10,7 @@ export abstract class BaseCommand extends EventEmitter {
   usage = "No usage defined.";
 
   options = [];
-  defaultPermissions = [];
+  defaultPermission: bigint = null;
 
   cooldown = null;
 

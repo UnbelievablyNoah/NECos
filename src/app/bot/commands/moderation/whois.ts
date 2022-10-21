@@ -18,7 +18,7 @@ export default class WhoisCommand extends BaseCommand {
   description =
     "Allows users to re-obtain roles, and reset their nickname based on the guild's ROBLOX bind data.";
   usage = "/whois @user OR roblox id OR discord id";
-  defaultPermissions = [PermissionFlagsBits.ModerateMembers];
+  defaultPermission = PermissionFlagsBits.ModerateMembers;
 
   options = [
     new SlashCommandUserOption()

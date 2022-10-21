@@ -86,12 +86,10 @@ export default async (Bot, Interaction: BaseInteraction) => {
     }
 
     // check permissions
-    let canExecute = command.defaultPermissions.length == 0;
+    let canExecute = command.defaultPermission == null;
 
-    for (const permissionFlagBit of command.defaultPermissions) {
-      if (member.permissions.has(permissionFlagBit)) {
-        canExecute = true;
-      }
+    if (member.permissions.has(command.defaultPermission)) {
+      canExecute = true;
     }
 
     if (!canExecute) {

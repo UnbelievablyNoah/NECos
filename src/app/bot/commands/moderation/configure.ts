@@ -13,7 +13,7 @@ export default class WhoisCommand extends BaseCommand {
   description =
     "Allows guild administrators to configure command permissions, channel Ids, etc.";
   usage = "/configure mode: string(list, set, unset), key: string(any), value: string(any)";
-  defaultPermissions = [PermissionFlagsBits.Administrator];
+  defaultPermission = PermissionFlagsBits.Administrator;
 
   options = [
     new SlashCommandStringOption()

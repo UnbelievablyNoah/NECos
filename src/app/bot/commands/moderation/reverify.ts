@@ -14,7 +14,7 @@ export default class UpdateCommand extends BaseCommand {
   usage = "/reverify @user";
 
   cooldown = 15;
-  defaultPermissions = [PermissionFlagsBits.ModerateMembers];
+  defaultPermission = PermissionFlagsBits.ModerateMembers;
 
   options = [
     new SlashCommandUserOption()
