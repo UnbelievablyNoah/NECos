@@ -34,11 +34,13 @@ import {
   GatewayIntentBits as Intents,
   GuildMember,
   Colors,
+  PermissionFlagsBits
 } from "discord.js";
 import { readdirSync } from "fs";
-import { CachedUserData, Guild } from "../Interfaces.js";
+import { CachedUserData } from "../Interfaces.js";
 import { BaseCommand } from "./classes/BaseCommand.js";
 import { Knex } from "knex";
+
 
 export class Bot {
   NECos = null;
@@ -139,20 +141,73 @@ export class Bot {
     const guilds = this.client.guilds.cache;
     const database: Knex = this.NECos.database;
 
-    for (const guildId of Array.from(guilds.keys())) {
-      const guild = guilds.get(guildId);
+    // Delete user
+    await database("users").delete("*").where("user_id", member.id)
+
+    for (const guild of Array.from(guilds.values())) {
+      const guildMember = await guild.members.resolve(member.id)
+
+      if (!guildMember) continue;
+
+      // Strip user of roles
+      const errors = [];
+      for (const role of guildMember.roles.cache) {
+        try {
+          await guildMember.roles.remove(role);
+        } catch (error) {
+          errors.push(error)
+        }
+      }
+      
+      if (errors.length == 0) {
+        errors.push("None.")
+      }
+
+      // Send notification that the user has been deleted
+      let notificationSent = false;
+
+      const embedData = {
+        color: Colors.DarkRed,
+        title: "Userdata Deletion",
+        description: `A user matching id ${member.id} has processed a full deletion of their userdata, and has been stripped of all roles in this server.\nErrors:${errors.join("\n")}`,
+      }
 
       try {
-        this.auditLogs.push(guild, {
-          color: Colors.DarkRed,
-          title: "Userdata Deletion",
-          description: `A user matching id ${member.id} has processed a full deletion of their userdata, and has been stripped of all roles in this server.`,
-        });
+        notificationSent = await new Promise<boolean>(async (resolve, reject) => {
+          try {
+            await this.auditLogs.push(guild, embedData);
+  
+            resolve(true);
+          } catch (error) {}
+  
+          try {
+            const guildOwner = await guild.fetchOwner();
+  
+            try {
+              await guildOwner.send(this.createEmbed(embedData))
+  
+              resolve(true);
+            } catch (error) {}
+          } catch (error) {}
+  
+          const guildMembers = await (await guild.members.list({limit: 1000})).filter(member => member.permissions.has(PermissionFlagsBits.Administrator));
+          let sent = false;
+          for (const guildMember of Array.from(guildMembers.values())) {
+            try {
+              await guildMember.send(this.createEmbed(embedData))
+  
+              sent = true;
+            } catch (error) {}
+          }
+
+          if (sent) {
+            resolve(true);
+          }
+  
+          reject("Failed to send member deletion signal to ANY channel or guild administrator.");
+        })
       } catch (error) {
-        console.error(error);
-        console.error(
-          "Failed to push audit log. Please investigate the above error."
-        );
+        this.console.error(error)
       }
     }
   };

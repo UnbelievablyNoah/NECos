@@ -84,12 +84,27 @@ export default async (Bot, Interaction: BaseInteraction) => {
       }
     }
 
-    // check defaultPermissions
+    // check permissions
     let canExecute = false;
 
-    // TODO
+    for (const permissionFlagBit of command.defaultPermissions) {
+      if (member.permissions.has(permissionFlagBit)) {
+        canExecute = true;
+      }
+    }
 
     if (!canExecute) {
+      await Interaction.editReply({
+        embeds: [
+          Bot.createEmbed({
+            color: Colors.Red,
+            title: "Unauthorized.",
+            description: "You do not have permission to execute that command."
+          })
+        ]
+      })
+
+      return;
     }
 
     if (!commandTrackers.has(command.name)) {
