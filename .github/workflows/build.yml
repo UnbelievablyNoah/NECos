@@ -60,6 +60,7 @@ jobs:
           Host deploy
             HostName ssh.imskyyc.xyz
             User deploy
+            Port 5622
             IdentityFile ~/.ssh/deploy.key
             StrictHostKeyChecking no
           END
