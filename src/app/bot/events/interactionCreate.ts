@@ -122,6 +122,17 @@ export default async (Bot, Interaction: BaseInteraction) => {
     var [commandExecuted, commandReturn] = [false, ""];
 
     try {
+      await Bot.channelLogging.push(Interaction.guild, "commandLogs", {
+        color: Colors.Orange,
+        title: "Command Executed",
+        description: `<@${member.id}> executed command \`${command.name}\``,
+        thumbnail: {
+          url: member.user.avatarURL()
+        }
+      })
+    } catch (error) {}
+
+    try {
       command.emit("command", Interaction);
       [commandExecuted, commandReturn] = await command.onCommand(Interaction);
     } catch (error) {

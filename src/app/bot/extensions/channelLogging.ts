@@ -26,7 +26,7 @@ import { Guild as DiscordGuild, APIEmbed } from "discord.js";
 import { Guild } from "../../Interfaces.js";
 import { Knex } from "knex";
 
-export default class AuditLogs extends BaseExtension {
+export default class ChannelLogging extends BaseExtension {
   queue = {};
   cooldowns = {};
 
@@ -34,7 +34,7 @@ export default class AuditLogs extends BaseExtension {
     super(NECos);
   }
 
-  push = async (guild: DiscordGuild, embedData: APIEmbed): Promise<void> => {
+  push = async (guild: DiscordGuild, logType: string, embedData: APIEmbed): Promise<void> => {
     const auditEmbed = this.Bot.createEmbed(embedData);
     const database: Knex = this.NECos.database;
 
@@ -45,13 +45,13 @@ export default class AuditLogs extends BaseExtension {
 
     const guildConfig = JSON.parse(guildConfigString.configuration);
 
-    const auditLogChannelId = guildConfig.channels.auditLogs;
-    if (!auditLogChannelId || auditLogChannelId == "-1") return;
+    const logChannelId = guildConfig.channels[logType];
+    if (!logChannelId || logChannelId == "-1") return;
 
-    const auditLogChannel = await guild.channels.resolve(auditLogChannelId);
-    if (!auditLogChannel || !auditLogChannel.isTextBased()) return;
+    const logChannel = await guild.channels.resolve(logChannelId);
+    if (!logChannel || !logChannel.isTextBased()) return;
 
-    await auditLogChannel.send({
+    await logChannel.send({
       embeds: [auditEmbed],
     });
   };

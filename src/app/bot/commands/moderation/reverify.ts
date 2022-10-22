@@ -8,7 +8,7 @@ import { Knex } from "knex";
 import { BaseCommand } from "../../classes/BaseCommand.js";
 import { User, Guild, CachedUserData } from "../../../Interfaces.js";
 
-export default class UpdateCommand extends BaseCommand {
+export default class ReverifyCommand extends BaseCommand {
   name = "reverify";
   description = "Allows guild moderators to force-update a user.";
   usage = "/reverify @user";

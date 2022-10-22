@@ -56,7 +56,7 @@ export class Bot {
   updateUser = null;
 
   // Declare extensions
-  auditLogs = null;
+  channelLogging = null;
   affiliates = null;
   music = null;
 
@@ -179,7 +179,7 @@ export class Bot {
        await new Promise<void>(
           async (resolve, reject) => {
             try {
-              await this.auditLogs.push(guild, embedData);
+              await this.channelLogging.push(guild, "auditLogs", embedData);
 
               resolve();
 
