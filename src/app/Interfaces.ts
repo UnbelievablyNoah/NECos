@@ -34,7 +34,9 @@ export interface GuildConfiguration {
     commandLogs: string;
   };
 
-  commandPermissions: { [commandName: string]: Array<typeof PermissionFlagsBits> };
+  commandPermissions: {
+    [commandName: string]: Array<typeof PermissionFlagsBits>;
+  };
 }
 
 export interface RoleBindData {

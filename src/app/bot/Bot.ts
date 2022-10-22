@@ -34,13 +34,12 @@ import {
   GatewayIntentBits as Intents,
   GuildMember,
   Colors,
-  PermissionFlagsBits
+  PermissionFlagsBits,
 } from "discord.js";
 import { readdirSync } from "fs";
 import { CachedUserData } from "../Interfaces.js";
 import { BaseCommand } from "./classes/BaseCommand.js";
 import { Knex } from "knex";
-
 
 export class Bot {
   NECos = null;
@@ -142,10 +141,10 @@ export class Bot {
     const database: Knex = this.NECos.database;
 
     // Delete user
-    await database("users").delete("*").where("user_id", member.id)
+    await database("users").delete("*").where("user_id", member.id);
 
     for (const guild of Array.from(guilds.values())) {
-      const guildMember = await guild.members.resolve(member.id)
+      const guildMember = await guild.members.resolve(member.id);
 
       if (!guildMember) continue;
 
@@ -155,12 +154,12 @@ export class Bot {
         try {
           await guildMember.roles.remove(role);
         } catch (error) {
-          errors.push(error)
+          errors.push(error);
         }
       }
-      
+
       if (errors.length == 0) {
-        errors.push("None.")
+        errors.push("None.");
       }
 
       // Send notification that the user has been deleted
@@ -169,45 +168,63 @@ export class Bot {
       const embedData = {
         color: Colors.DarkRed,
         title: "Userdata Deletion",
-        description: `A user matching id ${member.id} has processed a full deletion of their userdata, and has been stripped of all roles in this server.\nErrors:${errors.join("\n")}`,
-      }
+        description: `A user matching id ${
+          member.id
+        } has processed a full deletion of their userdata, and has been stripped of all roles in this server.\nErrors:\n${errors.join(
+          "\n"
+        )}`,
+      };
 
       try {
-        notificationSent = await new Promise<boolean>(async (resolve, reject) => {
-          try {
-            await this.auditLogs.push(guild, embedData);
-  
-            resolve(true);
-          } catch (error) {}
-  
-          try {
-            const guildOwner = await guild.fetchOwner();
-  
+       await new Promise<void>(
+          async (resolve, reject) => {
             try {
-              await guildOwner.send(this.createEmbed(embedData))
-  
-              resolve(true);
-            } catch (error) {}
-          } catch (error) {}
-  
-          const guildMembers = await (await guild.members.list({limit: 1000})).filter(member => member.permissions.has(PermissionFlagsBits.Administrator));
-          let sent = false;
-          for (const guildMember of Array.from(guildMembers.values())) {
-            try {
-              await guildMember.send(this.createEmbed(embedData))
-  
-              sent = true;
-            } catch (error) {}
-          }
+              await this.auditLogs.push(guild, embedData);
 
-          if (sent) {
-            resolve(true);
+              resolve();
+
+              return;
+            } catch (error) {}
+
+            try {
+              const guildOwner = await guild.fetchOwner();
+
+              try {
+                await guildOwner.send(this.createEmbed(embedData));
+
+                resolve();
+
+                return;
+              } catch (error) {}
+            } catch (error) {}
+
+            const guildMembers = await (
+              await guild.members.list({ limit: 1000 })
+            ).filter((member) =>
+              member.permissions.has(PermissionFlagsBits.Administrator)
+            );
+            let sent = false;
+            for (const guildMember of Array.from(guildMembers.values())) {
+              try {
+                await guildMember.send(this.createEmbed(embedData));
+
+                sent = true;
+              } catch (error) {}
+            }
+
+            if (sent) {
+              resolve();
+
+              return;
+            }
+
+            reject(
+              "Failed to send member deletion signal to ANY channel or guild administrator."
+            );
           }
-  
-          reject("Failed to send member deletion signal to ANY channel or guild administrator.");
-        })
+        );
       } catch (error) {
-        this.console.error(error)
+        this.console.error(error);
       }
     }
   };

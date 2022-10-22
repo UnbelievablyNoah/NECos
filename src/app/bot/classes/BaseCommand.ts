@@ -13,6 +13,7 @@ export abstract class BaseCommand extends EventEmitter {
   defaultPermission: bigint = null;
 
   cooldown = null;
+  developer = false;
 
   constructor(Bot) {
     super();

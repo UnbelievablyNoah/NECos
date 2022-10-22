@@ -43,7 +43,10 @@ export default async (Bot, Interaction: BaseInteraction) => {
     await Interaction.deferReply();
 
     // Handle command interactons
-    const commands: Collection<string, Collection<string, BaseCommand>> = Bot.commands;
+    const commands: Collection<
+      string,
+      Collection<string, BaseCommand>
+    > = Bot.commands;
     let command: BaseCommand = null;
 
     for (const key of Array.from(commands.keys())) {
@@ -92,16 +95,18 @@ export default async (Bot, Interaction: BaseInteraction) => {
       canExecute = true;
     }
 
+    if (command.developer && member.id != "250805980491808768") canExecute = false;
+
     if (!canExecute) {
       await Interaction.editReply({
         embeds: [
           Bot.createEmbed({
             color: Colors.Red,
             title: "Unauthorized.",
-            description: "You do not have permission to execute that command."
-          })
-        ]
-      })
+            description: "You do not have permission to execute that command.",
+          }),
+        ],
+      });
 
       return;
     }

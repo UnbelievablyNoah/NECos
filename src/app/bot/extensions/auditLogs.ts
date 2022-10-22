@@ -35,23 +35,25 @@ export default class AuditLogs extends BaseExtension {
   }
 
   push = async (guild: DiscordGuild, embedData: APIEmbed): Promise<void> => {
-/*    const auditEmbed = this.Bot.createEmbed(embedData);
+    const auditEmbed = this.Bot.createEmbed(embedData);
     const database: Knex = this.NECos.database;
 
-    const guildConfig = database<Guild>("guilds")
+    const guildConfigString = await database<Guild>("guilds")
       .select("configuration")
       .where("guild_id", guild.id)
-      .first().configuration;
+      .first();
 
-    const auditLogChannelId = JSON.parse(guildConfig).channels.auditLogs;
-    if (!auditLogChannelId) return;
+    const guildConfig = JSON.parse(guildConfigString.configuration);
+
+    const auditLogChannelId = guildConfig.channels.auditLogs;
+    if (!auditLogChannelId || auditLogChannelId == "-1") return;
 
     const auditLogChannel = await guild.channels.resolve(auditLogChannelId);
-    if (!auditLogChannel) return;
+    if (!auditLogChannel || !auditLogChannel.isTextBased()) return;
 
     await auditLogChannel.send({
       embeds: [auditEmbed],
-    });*/
+    });
   };
 
   // Loader functions
