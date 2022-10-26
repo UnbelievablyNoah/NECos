@@ -82,7 +82,7 @@ export default class Affiliates extends BaseExtension {
       const configuration = JSON.parse(guildData.configuration)
       const affiliatesChannels = configuration.affiliates;
 
-      if (!affiliatesChannels) continue;
+      if (!affiliatesChannels || !affiliatesChannels.listenerChannelIds || !affiliatesChannels.announcementWebhookData) continue;
 
       const affiliateGuildData = {
         guildId: guild.id,
