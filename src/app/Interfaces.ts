@@ -1,4 +1,4 @@
-import { PermissionFlagsBits } from "discord.js";
+import { PermissionFlagsBits, WebhookClient } from "discord.js";
 
 export interface User {
   id: number;
@@ -37,6 +37,12 @@ export interface GuildConfiguration {
   commandPermissions: {
     [commandName: string]: Array<typeof PermissionFlagsBits>;
   };
+}
+
+export interface AffiliateGuildData {
+  guildId: string;
+  announcementWebhookClients: Array<WebhookClient>;
+  listenerChannelIds: Array<string>;
 }
 
 export interface RoleBindData {

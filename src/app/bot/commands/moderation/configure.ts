@@ -111,9 +111,19 @@ export default class ConfigureCommand extends BaseCommand {
         var indexes = key.split(".") || [key];
         let foundValue = guildConfig;
 
-        for (const index of indexes) {
+        console.log(foundValue);
+
+        for (let i = 0; i < indexes.length - 1; i++) {
+          const index = indexes[i];
+
+          if (!foundValue[index]) {
+            foundValue[index] = {}
+          }
+
           foundValue = foundValue[index];
         }
+
+        foundValue = foundValue[indexes[indexes.length - 1]];
 
         if (foundValue != null && (typeof(value) != typeof(foundValue))) return [false, `Value of ${key} much match its current type. (${typeof(value)})`]
 
@@ -122,7 +132,12 @@ export default class ConfigureCommand extends BaseCommand {
           containingObject = containingObject[indexes[i]];
         }
 
-        containingObject[indexes[indexes.length - 1]] = value;
+        let parsedJSON = undefined;
+        try {
+          parsedJSON = await JSON.parse(value);
+        } catch (error) {}
+
+        containingObject[indexes[indexes.length - 1]] = (parsedJSON) || value;
 
         try {
           await database<Guild>("guilds")

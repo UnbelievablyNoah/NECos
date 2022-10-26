@@ -22,19 +22,61 @@
  */
 
 import { BaseExtension } from "../classes/BaseExtension.js";
+import { createAudioPlayer, NoSubscriberBehavior } from '@discordjs/voice';
+import { Collection, Guild } from "discord.js"
+import { PlayerData } from "../classes/PlayerData.js";
+import SpotifyApi from "spotify-web-api-node";
 
 export default class Music extends BaseExtension {
   queue = {};
   cooldowns = {};
 
+  playerData = new Collection<Guild, PlayerData>();
+  spotifyApi = null;
+
   constructor(NECos) {
     super(NECos);
+
+    this.up();
   }
 
-  requestSong = async (songQuery: string) => {};
+  requestSong = async (guild: Guild, songQuery: string) => {
+    if (!this.playerData.get(guild)) {
+      this.playerData.set(guild, new PlayerData(guild, createAudioPlayer({
+        behaviors: {
+          noSubscriber: NoSubscriberBehavior.Pause
+        }
+      })))
+    }
+
+    const playerData = this.playerData.get(guild);
+    playerData.queue.push(songQuery);
+
+    playerData.bumpQueue();
+  };
+
+  awaitSpotifyCallbackFetch = async () => {
+
+  }
 
   // Loader functions
-  up = async () => {};
+  up = async () => {
+    return;
+    this.spotifyApi = new SpotifyApi({
+      clientId: this.Bot.configuration.spotify.client_id,
+      clientSecret: this.Bot.configuration.spotify.client_secret,
+      redirectUri: "https://www.necos.dev/api/spotify_callback"
+    })
+
+    try {
+      const bruh = await this.spotifyApi.getArtistAlbums('3PhoLpVuITZKcymswpck5b');
+
+      console.log(bruh);
+    } catch (error) {
+      console.log("bruh!!")
+      console.log(error);
+    }
+  };
 
   down = async () => {};
 }

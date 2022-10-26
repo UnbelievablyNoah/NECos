@@ -46,13 +46,6 @@ export default class HelpCommand extends BaseCommand {
           .setValue(key)
           .setDescription(`All commands in the ${firstToUpper(key)} category.`)
       );
-
-      /*
-      options.push({
-        label: firstToUpper(key),
-        value: key,
-        description: `All commands relating to ${firstToUpper(key)}.`
-      })*/
     }
 
     const defaultEmbed = this.Bot.createEmbed({

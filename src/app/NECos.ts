@@ -22,6 +22,7 @@
 import { Configuration } from "./modules/Configuration.js";
 import { Console } from "./modules/Console.js";
 import { Bot } from "./bot/Bot.js";
+import { API } from "./api/API.js";
 
 import Knex from "knex";
 import * as dbConfig from "../../config/dbconfig.js";
@@ -33,6 +34,7 @@ const NECos = class NECos {
   exited = false;
   configuration = new Configuration("config/application.toml").configuration;
   bot = null;
+  api = null;
   version = "";
   console = null;
   database = null;
@@ -83,6 +85,16 @@ const NECos = class NECos {
         this.bot = new Bot(this);
       } catch (error) {
         this.console.error(`Discord bot failed to start. ${error}`);
+      }
+    }
+
+    // Run api if enabled
+    if (this.configuration.api.enabled) {
+      this.console.debug("REST API enabled. Starting...");
+      try {
+        this.api = new API(this);
+      } catch (error) {
+        this.console.error(`REST API failed to start. ${error}`);
       }
     }
 

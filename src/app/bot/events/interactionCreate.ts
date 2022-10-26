@@ -91,7 +91,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
     // check permissions
     let canExecute = command.defaultPermission == null;
 
-    if (member.permissions.has(command.defaultPermission)) {
+    if (command.defaultPermission && member.permissions.has(command.defaultPermission)) {
       canExecute = true;
     }
 
