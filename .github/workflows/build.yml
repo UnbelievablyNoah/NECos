@@ -65,5 +65,5 @@ jobs:
             StrictHostKeyChecking no
           END
       - name: "Deploy"
-        run: ssh deploy 'cd /srv/NECos && git pull && npm run build && NODE_ENV=production pm2 restart build/NECos.js'
+        run: ssh deploy 'sudo /bin/systemctl restart necos-beta.service'
 
