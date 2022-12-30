@@ -22,7 +22,7 @@
  */
 
 import { BaseExtension } from "../classes/BaseExtension.js";
-import { CommandInteraction, Message, Collection, Guild as DiscordGuild, Channel, WebhookClient } from "discord.js";
+import { CommandInteraction, Message, Collection, Guild as DiscordGuild, Channel, WebhookClient, WebhookCreateMessageOptions } from "discord.js";
 import { Knex } from "knex";
 import { Guild, AffiliateGuildData } from "../../Interfaces.js";
 export default class Affiliates extends BaseExtension {
@@ -38,8 +38,8 @@ export default class Affiliates extends BaseExtension {
     if (!Interaction.inCachedGuild()) return;
   };
 
-  onAffiliateAnnouncement = async (Message: Message) => {
-    const guild = Message.guild;
+  onAffiliateAnnouncement = async (message: Message) => {
+    const guild = message.guild;
 
     let affiliateGuildData = await this.guildData.get(guild.id);
 
@@ -52,13 +52,14 @@ export default class Affiliates extends BaseExtension {
 
     const announcementWebhookClients = affiliateGuildData.announcementWebhookClients;
     const listenerChannelIds = affiliateGuildData.listenerChannelIds;
-    if (!listenerChannelIds.includes(Message.channel.id)) return;
+    if (!listenerChannelIds.includes(message.channel.id)) return;
 
-    const announcementPayload = {
-      username: Message.author.username,
-      avatarURL: Message.author.avatarURL(),
+    const announcementPayload: WebhookCreateMessageOptions = {
+      username: message.author.username,
+      avatarURL: message.author.avatarURL(),
 
-      content: Message.content
+      content: message.content,
+      files: Array.from(message.attachments.values())
     }
 
     for (const announcementWebhook of announcementWebhookClients) {
