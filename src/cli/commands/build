@@ -4,4 +4,4 @@ WORKDIR="$SCRIPT_DIR/../../../";
 
 cd "$WORKDIR";
 
-rm -rf ./build && tsc && cp config/application.toml build/config
+rm -rf ./build && npx tsc && cp config/application.toml build/config

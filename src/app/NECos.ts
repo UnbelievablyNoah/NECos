@@ -54,7 +54,7 @@ const NECos = class NECos {
     process.on("uncaughtException", this.exit);
 
     this.debug =
-      process.argv.includes("--debug") || process.argv.includes("-D");
+      process.argv.includes("--debug") || process.argv.includes("-D") || process.env.NODE_ENV == "development";
 
     // try git rev-parse HEAD
     try {

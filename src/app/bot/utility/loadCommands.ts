@@ -68,8 +68,8 @@ export default async (Bot, pushToRest: boolean): Promise<void> => {
       SlashCommand.setName(command.name);
       SlashCommand.setDescription(command.description);
 
-      for (const defaultPermission of command.defaultPermissions || []) {
-        SlashCommand.setDefaultMemberPermissions(defaultPermission);
+      if (command.defaultPermission) {
+        SlashCommand.setDefaultMemberPermissions(command.defaultPermission);
       }
 
       for (const option of command.options || []) {
