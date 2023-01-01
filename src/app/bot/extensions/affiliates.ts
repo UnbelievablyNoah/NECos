@@ -22,7 +22,15 @@
  */
 
 import { BaseExtension } from "../classes/BaseExtension.js";
-import { CommandInteraction, Message, Collection, Guild as DiscordGuild, Channel, WebhookClient, WebhookCreateMessageOptions } from "discord.js";
+import {
+  CommandInteraction,
+  Message,
+  Collection,
+  Guild as DiscordGuild,
+  Channel,
+  WebhookClient,
+  WebhookCreateMessageOptions,
+} from "discord.js";
 import { Knex } from "knex";
 import { Guild, AffiliateGuildData } from "../../Interfaces.js";
 export default class Affiliates extends BaseExtension {
@@ -50,7 +58,8 @@ export default class Affiliates extends BaseExtension {
 
     if (!affiliateGuildData) return;
 
-    const announcementWebhookClients = affiliateGuildData.announcementWebhookClients;
+    const announcementWebhookClients =
+      affiliateGuildData.announcementWebhookClients;
     const listenerChannelIds = affiliateGuildData.listenerChannelIds;
     if (!listenerChannelIds.includes(message.channel.id)) return;
 
@@ -59,8 +68,8 @@ export default class Affiliates extends BaseExtension {
       avatarURL: message.author.avatarURL(),
 
       content: message.content,
-      files: Array.from(message.attachments.values())
-    }
+      files: Array.from(message.attachments.values()),
+    };
 
     for (const announcementWebhook of announcementWebhookClients) {
       try {
@@ -80,39 +89,59 @@ export default class Affiliates extends BaseExtension {
       const guild = await this.Bot.client.guilds.resolve(guildData.guild_id);
       if (!guild) continue;
 
-      const configuration = JSON.parse(guildData.configuration)
+      const configuration = JSON.parse(guildData.configuration);
       const affiliatesChannels = configuration.affiliates;
 
-      if (!affiliatesChannels || !affiliatesChannels.listenerChannelIds || !affiliatesChannels.announcementWebhookData) continue;
+      if (
+        !affiliatesChannels ||
+        !affiliatesChannels.listenerChannelIds ||
+        !affiliatesChannels.announcementWebhookData
+      )
+        continue;
 
       const affiliateGuildData = {
         guildId: guild.id,
         announcementWebhookClients: [],
-        listenerChannelIds: []
-      }
+        listenerChannelIds: [],
+      };
 
       for (const key of Object.keys(affiliatesChannels.listenerChannelIds)) {
         const listenerChannelId = affiliatesChannels.listenerChannelIds[key];
 
-        const channel: Channel = await this.Bot.client.channels.resolve(listenerChannelId);
+        const channel: Channel = await this.Bot.client.channels.resolve(
+          listenerChannelId
+        );
         if (!channel || !channel.isTextBased()) continue;
 
         affiliateGuildData.listenerChannelIds.push(channel.id);
       }
 
-      for (const key of Object.keys(affiliatesChannels.announcementWebhookData)) {
-        const announcementWebhookData = affiliatesChannels.announcementWebhookData[key];
+      for (const key of Object.keys(
+        affiliatesChannels.announcementWebhookData
+      )) {
+        const announcementWebhookData =
+          affiliatesChannels.announcementWebhookData[key];
 
-        const webhookClient = new WebhookClient({id: announcementWebhookData.id, token: announcementWebhookData.token}, {
-          allowedMentions: {
-            parse: []
+        const webhookClient = new WebhookClient(
+          {
+            id: announcementWebhookData.id,
+            token: announcementWebhookData.token,
+          },
+          {
+            allowedMentions: {
+              parse: [],
+            },
           }
-        })
+        );
 
         affiliateGuildData.announcementWebhookClients.push(webhookClient);
       }
 
-      if (affiliateGuildData.announcementWebhookClients.length == 0 || affiliateGuildData.listenerChannelIds.length == 0) return;
+      if (
+        affiliateGuildData.announcementWebhookClients.length == 0 ||
+        affiliateGuildData.listenerChannelIds.length == 0
+      )
+        return;
 
       this.guildData.set(guild.id, affiliateGuildData);
     }
@@ -124,5 +153,4 @@ export default class Affiliates extends BaseExtension {
   };
 
   down = async () => {};
-
 }

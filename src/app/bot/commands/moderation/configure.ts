@@ -83,7 +83,7 @@ export default class ConfigureCommand extends BaseCommand {
             const value = config[index];
 
             if (typeof value == "object") {
-              listString += `**${index}**:\n`
+              listString += `**${index}**:\n`;
               listString += parseStringFromConfig(value);
             } else {
               listString += `• ${index}: ${value}\n`;
@@ -100,10 +100,10 @@ export default class ConfigureCommand extends BaseCommand {
             this.Bot.createEmbed({
               color: Colors.Orange,
               title: "Guild Configuration",
-              description: `Current guild configuration for ${guild.name}:\n${listString}`
-            })
-          ]
-        })
+              description: `Current guild configuration for ${guild.name}:\n${listString}`,
+            }),
+          ],
+        });
         break;
       case "set":
         if (!key || !value) return [false, "Missing key or value argument"];
@@ -117,7 +117,7 @@ export default class ConfigureCommand extends BaseCommand {
           const index = indexes[i];
 
           if (!foundValue[index]) {
-            foundValue[index] = {}
+            foundValue[index] = {};
           }
 
           foundValue = foundValue[index];
@@ -125,7 +125,11 @@ export default class ConfigureCommand extends BaseCommand {
 
         foundValue = foundValue[indexes[indexes.length - 1]];
 
-        if (foundValue != null && (typeof(value) != typeof(foundValue))) return [false, `Value of ${key} much match its current type. (${typeof(value)})`]
+        if (foundValue != null && typeof value != typeof foundValue)
+          return [
+            false,
+            `Value of ${key} much match its current type. (${typeof value})`,
+          ];
 
         var containingObject = guildConfig;
         for (let i = 0; i < indexes.length - 1; i++) {
@@ -137,7 +141,7 @@ export default class ConfigureCommand extends BaseCommand {
           parsedJSON = await JSON.parse(value);
         } catch (error) {}
 
-        containingObject[indexes[indexes.length - 1]] = (parsedJSON) || value;
+        containingObject[indexes[indexes.length - 1]] = parsedJSON || value;
 
         try {
           await database<Guild>("guilds")
@@ -149,19 +153,19 @@ export default class ConfigureCommand extends BaseCommand {
               this.Bot.createEmbed({
                 color: Colors.Green,
                 title: "Guild Configuration Updated",
-                description: `${key} has been set to ${value}.`
-              })
-            ]
-          })
+                description: `${key} has been set to ${value}.`,
+              }),
+            ],
+          });
         } catch (error) {
           await Interaction.editReply({
             embeds: [
               this.Bot.createEmbed({
                 color: Colors.Red,
                 title: "Guild Configuration Update Unsuccessful",
-                description: `Guild configuration failed to update. ${error}.`
-              })
-            ]
+                description: `Guild configuration failed to update. ${error}.`,
+              }),
+            ],
           });
         }
 
@@ -176,14 +180,15 @@ export default class ConfigureCommand extends BaseCommand {
           containingObject = containingObject[indexes[i]];
         }
 
-        const valueType = typeof(containingObject[indexes[indexes.length - 1]])
+        const valueType = typeof containingObject[indexes[indexes.length - 1]];
         const defaultValues = {
           string: "-1",
           number: -1,
-          object: {}
-        }
+          object: {},
+        };
 
-        containingObject[indexes[indexes.length - 1]] = defaultValues[valueType];
+        containingObject[indexes[indexes.length - 1]] =
+          defaultValues[valueType];
 
         try {
           await database<Guild>("guilds")
@@ -195,19 +200,19 @@ export default class ConfigureCommand extends BaseCommand {
               this.Bot.createEmbed({
                 color: Colors.Green,
                 title: "Guild Configuration Updated",
-                description: `${key} has been set to default.`
-              })
-            ]
-          })
+                description: `${key} has been set to default.`,
+              }),
+            ],
+          });
         } catch (error) {
           await Interaction.editReply({
             embeds: [
               this.Bot.createEmbed({
                 color: Colors.Red,
                 title: "Guild Configuration Update Unsuccessful",
-                description: `Guild configuration failed to update. ${error}.`
-              })
-            ]
+                description: `Guild configuration failed to update. ${error}.`,
+              }),
+            ],
           });
         }
 

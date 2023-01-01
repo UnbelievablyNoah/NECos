@@ -25,6 +25,6 @@
 import { Message } from "discord.js";
 
 export default async (Bot, Message: Message) => {
-//    console.log(Message);
+  //    console.log(Message);
   if (Bot.affiliates) Bot.affiliates.onAffiliateAnnouncement(Message);
 };

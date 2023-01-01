@@ -26,7 +26,7 @@ import { GuildMember, Guild } from "discord.js";
 import { User, Guild as GuildData, CachedUserData } from "../../Interfaces.js";
 
 import Noblox from "noblox.js";
-const { getRankInGroup } = Noblox;
+const { getRankInGroup, getUsernameFromId } = Noblox;
 
 export default async (
   Bot,
@@ -43,6 +43,7 @@ export default async (
 
   const errors = [];
 
+  // Append / remove roles
   for (const boundRole of bindData) {
     const binds = boundRole.binds;
     const isDefault = boundRole.isDefault;
@@ -120,6 +121,14 @@ export default async (
         }
       }
     }
+  }
+
+  // Set nickname
+  const username = await getUsernameFromId(user.roblox_id);
+  try {
+    await member.setNickname(username);
+  } catch (error) {
+    errors.push(`Failed to set member nickname: ${error}`);
   }
 
   return errors;

@@ -10,6 +10,7 @@ export abstract class BaseCommand extends EventEmitter {
   usage = "No usage defined.";
 
   options = [];
+  subCommands = [];
   defaultPermission: bigint = null;
 
   cooldown = null;

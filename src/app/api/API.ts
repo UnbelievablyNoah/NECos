@@ -40,12 +40,14 @@ export class API {
 
     this.server = Express();
 
-    this.server.get('/api', (req, res) => {
-      res.json({success: true, version: this.NECos.version, message: "OK"})
+    this.server.get("/api", (req, res) => {
+      res.json({ success: true, version: this.NECos.version, message: "OK" });
     });
 
     this.server.listen(this.configuration.bind_port, () => {
-      this.console.debug(`REST API listening on port ${this.configuration.bind_port}`)
+      this.console.debug(
+        `REST API listening on port ${this.configuration.bind_port}`
+      );
     });
   };
 }

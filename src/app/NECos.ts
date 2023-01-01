@@ -28,6 +28,9 @@ import Knex from "knex";
 import * as dbConfig from "../../config/dbconfig.js";
 import { exec } from "child_process";
 
+import Noblox from "noblox.js";
+const { setCookie } = Noblox;
+
 // Instantiate NECos object
 const NECos = class NECos {
   debug = false;
@@ -54,7 +57,9 @@ const NECos = class NECos {
     process.on("uncaughtException", this.exit);
 
     this.debug =
-      process.argv.includes("--debug") || process.argv.includes("-D") || process.env.NODE_ENV == "development";
+      process.argv.includes("--debug") ||
+      process.argv.includes("-D") ||
+      process.env.NODE_ENV == "development";
 
     // try git rev-parse HEAD
     try {
@@ -77,6 +82,14 @@ const NECos = class NECos {
     this.console.debug("Initializing database");
     this.database = Knex(dbConfig.default[process.env.NODE_ENV]);
     this.console.debug("Database initialized");
+
+    // Set roblosecurity
+    try {
+      setCookie(this.configuration.roblox.user_token);
+    } catch (error) {
+      this.console.error(error);
+      this.console.warn(`Failed to set roblosecurity token.`);
+    }
 
     // Run bot if enabled
     if (this.configuration.bot.enabled) {
@@ -102,6 +115,7 @@ const NECos = class NECos {
   };
 
   exit = async (signal) => {
+    console.log(signal);
     this.console.debug(`EXITING WITH CODE ${signal}`);
 
     try {

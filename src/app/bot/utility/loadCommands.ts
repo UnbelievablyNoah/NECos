@@ -23,7 +23,10 @@
  */
 
 import { readdir } from "fs/promises";
-import { SlashCommandBuilder } from "@discordjs/builders";
+import {
+  SlashCommandBuilder,
+  SlashCommandSubcommandBuilder,
+} from "@discordjs/builders";
 import { REST, Routes, Collection } from "discord.js";
 
 import * as path from "path";
@@ -75,6 +78,20 @@ export default async (Bot, pushToRest: boolean): Promise<void> => {
       for (const option of command.options || []) {
         SlashCommand.options.push(option);
       }
+
+      for (const subCommand of command.subCommands || []) {
+        SlashCommand.addSubcommand((subCom) => {
+          subCom.setName(subCommand.name);
+          subCom.setDescription(subCommand.description);
+
+          for (const option of subCommand.options || []) {
+            subCom.options.push(option);
+          }
+
+          return subCom;
+        });
+      }
+
       commandJSON.push(SlashCommand.toJSON());
 
       console.debug("Command constructed!");

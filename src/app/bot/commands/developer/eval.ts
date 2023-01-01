@@ -9,18 +9,16 @@ import { inspect } from "util";
 
 export default class EvalCommand extends BaseCommand {
   name = "eval";
-  description =
-    "Allows bot developers to execute raw JavaScript code.";
-  usage =
-    "/eval code: string";
-  
+  description = "Allows bot developers to execute raw JavaScript code.";
+  usage = "/eval code: string";
+
   developer = true;
 
   options = [
     new SlashCommandStringOption()
       .setName("code")
       .setDescription("The code to run.")
-      .setRequired(true)
+      .setRequired(true),
   ];
 
   constructor(Bot) {
@@ -37,17 +35,14 @@ export default class EvalCommand extends BaseCommand {
     const Bot = this.Bot;
 
     async function cleanString(string) {
-      if (string && string.constructor && string.constructor.name == "Promise") string = await string;
-      if (typeof string !== "string")
-        string = inspect(string, { depth: 1 });
+      if (string && string.constructor && string.constructor.name == "Promise")
+        string = await string;
+      if (typeof string !== "string") string = inspect(string, { depth: 1 });
 
       string = string
-        .replace(
-          Bot.client.token,
-          "[Content Removed for Security Reasons.]"
-        )
+        .replace(Bot.client.token, "[Content Removed for Security Reasons.]")
         .replace(/`/g, "`" + String.fromCharCode(8203))
-        .replace(/@/g, "@" + String.fromCharCode(8203))
+        .replace(/@/g, "@" + String.fromCharCode(8203));
       return string;
     }
 
@@ -74,7 +69,7 @@ export default class EvalCommand extends BaseCommand {
         ],
       });
     }
-    
+
     return [true, ""];
   };
 }

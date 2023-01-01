@@ -176,53 +176,51 @@ export class Bot {
       };
 
       try {
-       await new Promise<void>(
-          async (resolve, reject) => {
+        await new Promise<void>(async (resolve, reject) => {
+          try {
+            await this.channelLogging.push(guild, "auditLogs", embedData);
+
+            resolve();
+
+            return;
+          } catch (error) {}
+
+          try {
+            const guildOwner = await guild.fetchOwner();
+
             try {
-              await this.channelLogging.push(guild, "auditLogs", embedData);
+              await guildOwner.send(this.createEmbed(embedData));
 
               resolve();
 
               return;
             } catch (error) {}
+          } catch (error) {}
 
+          const guildMembers = await (
+            await guild.members.list({ limit: 1000 })
+          ).filter((member) =>
+            member.permissions.has(PermissionFlagsBits.Administrator)
+          );
+          let sent = false;
+          for (const guildMember of Array.from(guildMembers.values())) {
             try {
-              const guildOwner = await guild.fetchOwner();
+              await guildMember.send(this.createEmbed(embedData));
 
-              try {
-                await guildOwner.send(this.createEmbed(embedData));
-
-                resolve();
-
-                return;
-              } catch (error) {}
+              sent = true;
             } catch (error) {}
-
-            const guildMembers = await (
-              await guild.members.list({ limit: 1000 })
-            ).filter((member) =>
-              member.permissions.has(PermissionFlagsBits.Administrator)
-            );
-            let sent = false;
-            for (const guildMember of Array.from(guildMembers.values())) {
-              try {
-                await guildMember.send(this.createEmbed(embedData));
-
-                sent = true;
-              } catch (error) {}
-            }
-
-            if (sent) {
-              resolve();
-
-              return;
-            }
-
-            reject(
-              "Failed to send member deletion signal to ANY channel or guild administrator."
-            );
           }
-        );
+
+          if (sent) {
+            resolve();
+
+            return;
+          }
+
+          reject(
+            "Failed to send member deletion signal to ANY channel or guild administrator."
+          );
+        });
       } catch (error) {
         this.console.error(error);
       }

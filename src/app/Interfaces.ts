@@ -39,6 +39,19 @@ export interface GuildConfiguration {
   };
 }
 
+export interface Affiliate {
+  id: string;
+  discord_id: string;
+  group_name: string;
+  group_id: string;
+  owner_id: string;
+  invite: string;
+  data_cache: string;
+  representatives: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AffiliateGuildData {
   guildId: string;
   announcementWebhookClients: Array<WebhookClient>;

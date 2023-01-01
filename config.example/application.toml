@@ -11,6 +11,9 @@
         enable_sharding = false
         token = ""
 
+[roblox]
+    user_token = ""
+
 [api]
     enabled = true
     bind_port = 3000

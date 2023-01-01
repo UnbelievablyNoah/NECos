@@ -38,7 +38,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
   if (!Interaction.inCachedGuild()) return;
   const member = Interaction.member;
 
-  if (Interaction.isCommand() && Bot.commands) {
+  if (Interaction.isChatInputCommand() && Bot.commands) {
     // Defer interaction
     await Interaction.deferReply();
 
@@ -49,6 +49,14 @@ export default async (Bot, Interaction: BaseInteraction) => {
     > = Bot.commands;
     let command: BaseCommand = null;
 
+    const options = Interaction.options;
+    let subCommandName = undefined;
+    let subCommand = undefined;
+
+    try {
+      subCommandName = await options.getSubcommand();
+    } catch (error) {}
+
     for (const key of Array.from(commands.keys())) {
       const category = commands.get(key);
       command = category.find(
@@ -56,6 +64,20 @@ export default async (Bot, Interaction: BaseInteraction) => {
       );
 
       if (command) break;
+    }
+
+    let commandName = command.name;
+
+    if (subCommandName) {
+      for (const subCom of command.subCommands) {
+        if (subCom.name == subCommandName) {
+          subCommand = subCom;
+
+          commandName = commandName + " " + subCom.name;
+
+          break;
+        }
+      }
     }
 
     // check cooldown
@@ -91,11 +113,18 @@ export default async (Bot, Interaction: BaseInteraction) => {
     // check permissions
     let canExecute = command.defaultPermission == null;
 
-    if (command.defaultPermission && member.permissions.has(command.defaultPermission)) {
+    if (
+      (command.defaultPermission &&
+        member.permissions.has(command.defaultPermission)) ||
+      (subCommand &&
+        subCommand.defaultPermission &&
+        member.permissions.has(subCommand.defaultPermission))
+    ) {
       canExecute = true;
     }
 
-    if (command.developer && member.id != "250805980491808768") canExecute = false;
+    if (command.developer && member.id != "250805980491808768")
+      canExecute = false;
 
     if (!canExecute) {
       await Interaction.editReply({
@@ -111,11 +140,11 @@ export default async (Bot, Interaction: BaseInteraction) => {
       return;
     }
 
-    if (!commandTrackers.has(command.name)) {
-      commandTrackers.set(command.name, new Collection());
+    if (!commandTrackers.has(commandName)) {
+      commandTrackers.set(commandName, new Collection());
     }
 
-    const commandTracker = commandTrackers.get(command.name);
+    const commandTracker = commandTrackers.get(commandName);
     if (commandTracker.has(member.id)) return;
 
     commandTracker.set(member.id, true);
@@ -125,16 +154,23 @@ export default async (Bot, Interaction: BaseInteraction) => {
       await Bot.channelLogging.push(Interaction.guild, "commandLogs", {
         color: Colors.Orange,
         title: "Command Executed",
-        description: `<@${member.id}> executed command \`${command.name}\``,
+        description: `<@${member.id}> executed command \`${commandName}\``,
         thumbnail: {
-          url: member.user.avatarURL()
-        }
-      })
+          url: member.user.avatarURL(),
+        },
+      });
     } catch (error) {}
 
     try {
       command.emit("command", Interaction);
-      [commandExecuted, commandReturn] = await command.onCommand(Interaction);
+
+      if (subCommand) {
+        [commandExecuted, commandReturn] = await subCommand.onCommand(
+          Interaction
+        );
+      } else {
+        [commandExecuted, commandReturn] = await command.onCommand(Interaction);
+      }
     } catch (error) {
       console.error(error);
       console.error(

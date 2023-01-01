@@ -34,7 +34,11 @@ export default class ChannelLogging extends BaseExtension {
     super(NECos);
   }
 
-  push = async (guild: DiscordGuild, logType: string, embedData: APIEmbed): Promise<void> => {
+  push = async (
+    guild: DiscordGuild,
+    logType: string,
+    embedData: APIEmbed
+  ): Promise<void> => {
     const auditEmbed = this.Bot.createEmbed(embedData);
     const database: Knex = this.NECos.database;
 
