@@ -48,10 +48,10 @@ export default class AffiliatesCommand extends BaseCommand {
 
         const pageNumber = options.getNumber("page");
         const pages =
-          (affiliates.length > 5 && Math.floor(affiliates.length / 5)) || 1;
+          (affiliates.length > 2 && Math.floor(affiliates.length / 2)) || 1;
 
         for (const index in affiliates) {
-          if (pageNumber && pages > 1 && parseInt(index) < pageNumber) continue;
+          if (pageNumber && pages > 1 && parseInt(index) <= pageNumber) continue;
 
           const affiliate = affiliates[index];
           const groupId = parseInt(affiliate.group_id);
