@@ -38,7 +38,7 @@ const NECos = class NECos {
   configuration = new Configuration("config/application.toml").configuration;
   bot = null;
   api = null;
-  version = "";
+  version = "unknown";
   console = null;
   database = null;
 

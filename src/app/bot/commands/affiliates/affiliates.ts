@@ -45,13 +45,15 @@ export default class AffiliatesCommand extends BaseCommand {
         const database: Knex = this.NECos.database;
         const affiliates = await database<Affiliate>("affiliates").select("*");
         const affiliateEmbeds = [];
+        const pages = (affiliates.length > 2 && Math.floor(affiliates.length / 2)) || 1;
+        let pageNumber = options.getNumber("page");
 
-        const pageNumber = options.getNumber("page");
-        const pages =
-          (affiliates.length > 2 && Math.floor(affiliates.length / 2)) || 1;
+        if (!pageNumber) {
+          pageNumber = 1;
+        }
 
         for (const index in affiliates) {
-          if (pageNumber && pages > 1 && parseInt(index) <= pageNumber) continue;
+          if (pages > 1 && parseInt(index) <= pageNumber) continue;
 
           const affiliate = affiliates[index];
           const groupId = parseInt(affiliate.group_id);
