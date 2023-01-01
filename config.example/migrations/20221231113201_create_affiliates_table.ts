@@ -5,9 +5,9 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("affiliates", function (table) {
     table.increments("id");
     
-    table.string("discord_id").notNullable().unique();
-    table.string("group_name").notNullable().unique();
-    table.string("group_id").notNullable().unique();
+    table.string("discord_id").notNullable();
+    table.string("group_name").notNullable();
+    table.string("group_id").notNullable();
     table.string("owner_id").notNullable();
     table.string("invite").notNullable().defaultTo("N/A");
 

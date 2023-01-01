@@ -204,7 +204,7 @@ export default async (Bot, Interaction: BaseInteraction) => {
     if (!commandExecuted) {
       const embed = Bot.createEmbed({
         title: "Command Execution Failed",
-        description: `Command ${command.name} failed to execute: ${commandReturn}.`,
+        description: `Command ${command.name} failed to execute: ${commandReturn}`,
         color: Colors.Red,
       });
 
