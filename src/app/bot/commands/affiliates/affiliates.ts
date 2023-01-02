@@ -53,7 +53,11 @@ export default class AffiliatesCommand extends BaseCommand {
         }
 
         for (const index in affiliates) {
-          if (pages > 1 && parseInt(index) <= pageNumber) continue;
+          let start = (pageNumber - 1) * 2;
+          let end = pageNumber * 2;
+          let numIndex = parseInt(index)
+          
+          if (numIndex >= start && numIndex < end) continue;
 
           const affiliate = affiliates[index];
           const groupId = parseInt(affiliate.group_id);
