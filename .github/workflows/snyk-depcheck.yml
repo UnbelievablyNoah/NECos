@@ -6,7 +6,7 @@ jobs:
     steps:
       - name: "Install npm deps"
         shell: bash
-        run: "rm -rf package-lock.json && npm ci"
+        run: "rm -rf package-lock.json && npm install"
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
